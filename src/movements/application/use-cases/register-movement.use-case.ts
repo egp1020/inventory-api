@@ -11,9 +11,29 @@ const MOVEMENT_REPOSITORY = Symbol('MOVEMENT_REPOSITORY');
 
 /**
  * RegisterMovementUseCase
- * Registra un nuevo movimiento (entrada o salida)
- * Valida stock disponible para SALIDAs mediante el repositorio
- * Depende de: IMovementRepository (que hace todas las validaciones)
+ *
+ * Registra un nuevo movimiento (entrada o salida) en el inventario.
+ * Responsabilidad: Orquestar la creación y validación de movimientos dentro de una transacción atómica.
+ *
+ * Flujo:
+ * 1. Crear entidad Movement con los datos del comando
+ * 2. Ejecutar validaciones de dominio (tipo válido, cantidad > 0)
+ * 3. Delegar al repositorio para:
+ *    - Validar producto existe
+ *    - Validar bodega existe
+ *    - Validar usuario tiene permisos en esa bodega (si es OPERATOR)
+ *    - Validar stock disponible (si es SALIDA)
+ *    - Persistir en transacción
+ * 4. Retornar DTO con datos del movimiento creado
+ *
+ * Nota: Toda operación de persistencia se ejecuta en transacción Prisma $transaction
+ * para garantizar atomicidad.
+ *
+ * @throws {ProductNotFoundForMovementError} Si el producto no existe
+ * @throws {WarehouseNotFoundForMovementError} Si la bodega no existe
+ * @throws {UserNotFoundForMovementError} Si el usuario no existe
+ * @throws {UnauthorizedMovementError} Si OPERATOR intenta crear en otra bodega
+ * @throws {InsufficientStockError} Si intenta SALIDA sin stock suficiente
  */
 @Injectable()
 export class RegisterMovementUseCase {
@@ -22,6 +42,13 @@ export class RegisterMovementUseCase {
     private readonly movementRepository: IMovementRepository,
   ) {}
 
+  /**
+   * Ejecuta el caso de uso de registro de movimiento.
+   *
+   * @param command - Comando con datos de producto, bodega, usuario, tipo y cantidad
+   * @returns Promise<MovementResultDto> - Movimiento creado con todos sus detalles
+   * @throws Errores de dominio si validaciones fallan (ver clase)
+   */
   async execute(
     command: RegisterMovementCommandDto,
   ): Promise<MovementResultDto> {
