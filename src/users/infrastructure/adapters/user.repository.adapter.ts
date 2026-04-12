@@ -91,6 +91,7 @@ export class UserRepositoryAdapter implements IUserRepository {
     return count > 0;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private toDomain(userRaw: any): User {
     return User.create({
       id: userRaw.id,

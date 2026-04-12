@@ -49,7 +49,8 @@ describe('GetWarehouseByIdUseCase', () => {
 
       expect(result).toBeInstanceOf(WarehouseResultDto);
       expect(result.name).toBe('Test Warehouse');
-      expect(mockRepository.findById).toHaveBeenCalledWith('123');
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(mockRepository.findById as jest.Mock).toHaveBeenCalledWith('123');
     });
 
     it('should throw error when warehouse not found', async () => {

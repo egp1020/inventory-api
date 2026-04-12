@@ -7,14 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import {
-  DomainError,
-  UnauthorizedError,
-  ForbiddenError,
-  NotFoundError,
-  ConflictError,
-  UnprocessableError,
-} from '@shared/domain/errors/domain.errors';
+import { DomainError } from '@shared/domain/errors/domain.errors';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {

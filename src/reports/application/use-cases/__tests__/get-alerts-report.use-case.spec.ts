@@ -1,4 +1,3 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { GetAlertsReportUseCase } from '../get-alerts-report.use-case';
 import { AlertItemDto, AlertsReportResultDto } from '@reports/application/dtos';
 import { IReportRepository } from '@reports/application/ports';

@@ -48,7 +48,8 @@ describe('CreateWarehouseUseCase', () => {
       expect(result.location).toBe('Madrid');
       expect(result.capacity).toBe(5000);
       expect(result.isActive).toBe(true);
-      expect(mockRepository.save).toHaveBeenCalledTimes(1);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(mockRepository.save as jest.Mock).toHaveBeenCalledTimes(1);
     });
 
     it('should create warehouse with valid capacity', async () => {
@@ -61,7 +62,8 @@ describe('CreateWarehouseUseCase', () => {
       const result = await useCase.execute(command);
 
       expect(result.capacity).toBe(10000);
-      expect(mockRepository.save).toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(mockRepository.save as jest.Mock).toHaveBeenCalled();
     });
 
     it('should fail with invalid capacity', async () => {

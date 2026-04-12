@@ -1,5 +1,4 @@
 import { User } from '../entities/user.entity';
-import { Role } from '@prisma/client';
 
 /**
  * Port (interfaz) para persistencia de usuarios.

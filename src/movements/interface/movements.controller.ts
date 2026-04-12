@@ -57,8 +57,10 @@ export class MovementsController {
   })
   async register(
     @Body() request: RegisterMovementRequestDto,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Req() req: any,
   ): Promise<MovementResponseDto> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const userId = req.user?.sub;
     if (!userId) {
       throw new BadRequestException('User not found in request');
@@ -67,6 +69,7 @@ export class MovementsController {
     const command = new RegisterMovementCommandDto(
       request.productId,
       request.warehouseId,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       userId,
       request.type,
       request.quantity,
@@ -113,6 +116,7 @@ export class MovementsController {
     );
 
     return new PaginatedMovementResponseDto(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       result.data.map((m) => new MovementResponseDto(m)),
       result.page,
       result.limit,

@@ -67,8 +67,10 @@ describe('LoginUseCase', () => {
         accessToken: 'access-token',
         refreshToken: 'refresh-token',
       });
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(userRepository.findByEmail).toHaveBeenCalledWith(email);
-      expect(passwordHasher.compare).toHaveBeenCalledWith(
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(passwordHasher.compare as jest.Mock).toHaveBeenCalledWith(
         password,
         'hashed-password',
       );

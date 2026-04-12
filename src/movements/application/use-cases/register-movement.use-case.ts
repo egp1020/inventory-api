@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IMovementRepository } from '@movements/domain/ports';
-import { Movement, MovementType } from '@movements/domain';
+import { Movement } from '@movements/domain';
 import { Quantity } from '@movements/domain/value-objects';
 import {
   RegisterMovementCommandDto,

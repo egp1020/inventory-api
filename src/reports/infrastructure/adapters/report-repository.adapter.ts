@@ -41,6 +41,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
         where: {
           productId: product.id,
           warehouseId,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           type: 'ENTRADA' as any,
         },
         _sum: { quantity: true },
@@ -50,6 +51,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
         where: {
           productId: product.id,
           warehouseId,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           type: 'SALIDA' as any,
         },
         _sum: { quantity: true },
@@ -91,6 +93,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
           where: {
             productId: product.id,
             warehouseId: warehouse.id,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             type: 'ENTRADA' as any,
           },
           _sum: { quantity: true },
@@ -100,6 +103,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
           where: {
             productId: product.id,
             warehouseId: warehouse.id,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             type: 'SALIDA' as any,
           },
           _sum: { quantity: true },
