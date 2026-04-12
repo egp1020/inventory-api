@@ -9,6 +9,7 @@ import {
   MovementHistoryItemDto,
   MovementHistoryReportResultDto,
 } from '@reports/application/dtos';
+import { MovementTypeMapper } from '@movements/infrastructure/mappers';
 
 /**
  * ReportRepositoryAdapter
@@ -41,8 +42,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
         where: {
           productId: product.id,
           warehouseId,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          type: 'ENTRADA' as any,
+          type: MovementTypeMapper.toPersistence('ENTRADA'),
         },
         _sum: { quantity: true },
       });
@@ -51,8 +51,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
         where: {
           productId: product.id,
           warehouseId,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          type: 'SALIDA' as any,
+          type: MovementTypeMapper.toPersistence('SALIDA'),
         },
         _sum: { quantity: true },
       });
@@ -93,8 +92,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
           where: {
             productId: product.id,
             warehouseId: warehouse.id,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            type: 'ENTRADA' as any,
+            type: MovementTypeMapper.toPersistence('ENTRADA'),
           },
           _sum: { quantity: true },
         });
@@ -103,8 +101,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
           where: {
             productId: product.id,
             warehouseId: warehouse.id,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            type: 'SALIDA' as any,
+            type: MovementTypeMapper.toPersistence('SALIDA'),
           },
           _sum: { quantity: true },
         });
@@ -150,7 +147,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
       where.warehouseId = warehouseId;
     }
     if (type) {
-      where.type = type as any;
+      where.type = MovementTypeMapper.toPersistence(type);
     }
     if (startDate && endDate) {
       where.createdAt = { gte: startDate, lte: endDate };
