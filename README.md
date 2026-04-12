@@ -594,6 +594,8 @@ npx prisma migrate deploy
 5. **Stock dinámico** calculado desde movimientos
 6. **OPERATOR asignado a 1 sola bodega**
 7. **Contraseñas**: bcrypt con 10+ salt rounds
+8. **GET /reports/alerts**: Restringido a **ADMIN** (no solo autenticado)
+   - **Justificación**: Las alertas de bajo stock son información sensible de negocio que afecta decisiones de compra y estrategia de inventario. Solo administradores deben verlas. Los OPERATORs ven stock en `GET /reports/stock/:warehouseId` pero no alertas globales.
 
 ### Limitaciones Conocidas
 
