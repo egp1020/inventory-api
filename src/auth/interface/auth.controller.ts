@@ -5,6 +5,7 @@ import { RefreshTokenRequestDto } from './dtos/refresh-token-request.dto';
 import { AuthResponseDto } from './dtos/auth-response.dto';
 import { LoginUseCase } from '../application/use-cases/login.use-case';
 import { RefreshTokenUseCase } from '../application/use-cases/refresh-token.use-case';
+import { LoginCommandDto, RefreshTokenCommandDto } from '../application/dtos';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -30,7 +31,11 @@ export class AuthController {
     description: 'Email o contraseña inválidos',
   })
   async login(@Body() dto: LoginRequestDto): Promise<AuthResponseDto> {
-    return this.loginUseCase.execute(dto.email, dto.password);
+    const command: LoginCommandDto = {
+      email: dto.email,
+      password: dto.password,
+    };
+    return this.loginUseCase.execute(command);
   }
 
   @Post('refresh')
@@ -51,6 +56,9 @@ export class AuthController {
   async refresh(
     @Body() dto: RefreshTokenRequestDto,
   ): Promise<AuthResponseDto> {
-    return this.refreshTokenUseCase.execute(dto.refreshToken);
+    const command: RefreshTokenCommandDto = {
+      refreshToken: dto.refreshToken,
+    };
+    return this.refreshTokenUseCase.execute(command);
   }
 }

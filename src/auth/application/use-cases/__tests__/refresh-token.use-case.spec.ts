@@ -3,6 +3,7 @@ import { IUserRepository } from '../../../domain/ports/user.repository.port';
 import { ITokenGenerator } from '../../ports/token-generator.port';
 import { User } from '../../../domain/entities/user.entity';
 import { InvalidRefreshTokenError, UserInactiveError } from '../../../domain/errors/auth.errors';
+import { RefreshTokenCommandDto } from '../../dtos';
 
 describe('RefreshTokenUseCase', () => {
   let useCase: RefreshTokenUseCase;
@@ -48,7 +49,8 @@ describe('RefreshTokenUseCase', () => {
       tokenGenerator.generateRefreshToken.mockReturnValue('new-refresh-token');
 
       // Act
-      const result = await useCase.execute(refreshToken);
+      const command: RefreshTokenCommandDto = { refreshToken };
+      const result = await useCase.execute(command);
 
       // Assert
       expect(result).toEqual({
@@ -64,9 +66,8 @@ describe('RefreshTokenUseCase', () => {
       tokenGenerator.validateRefreshToken.mockReturnValue(null);
 
       // Act & Assert
-      await expect(
-        useCase.execute('invalid-token'),
-      ).rejects.toThrow(InvalidRefreshTokenError);
+      const command: RefreshTokenCommandDto = { refreshToken: 'invalid-token' };
+      await expect(useCase.execute(command)).rejects.toThrow(InvalidRefreshTokenError);
     });
 
     it('should throw InvalidRefreshTokenError when user not found', async () => {
@@ -75,9 +76,8 @@ describe('RefreshTokenUseCase', () => {
       userRepository.findById.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(
-        useCase.execute('valid-token'),
-      ).rejects.toThrow(InvalidRefreshTokenError);
+      const command: RefreshTokenCommandDto = { refreshToken: 'valid-token' };
+      await expect(useCase.execute(command)).rejects.toThrow(InvalidRefreshTokenError);
     });
 
     it('should throw UserInactiveError when user is deleted', async () => {
@@ -96,9 +96,8 @@ describe('RefreshTokenUseCase', () => {
       userRepository.findById.mockResolvedValue(user);
 
       // Act & Assert
-      await expect(
-        useCase.execute('valid-token'),
-      ).rejects.toThrow(UserInactiveError);
+      const command: RefreshTokenCommandDto = { refreshToken: 'valid-token' };
+      await expect(useCase.execute(command)).rejects.toThrow(UserInactiveError);
     });
   });
 });

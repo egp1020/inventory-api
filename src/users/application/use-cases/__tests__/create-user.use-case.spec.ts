@@ -3,6 +3,7 @@ import type { IUserRepository } from '../../../domain/ports/user.repository.port
 import type { IWarehouseValidator } from '../../../domain/ports/user.repository.port';
 import type { IPasswordHasher } from '../../../../auth/application/ports/password-hasher.port';
 import { UserAlreadyExistsError, WarehouseNotFoundError } from '../../../domain/errors/user.errors';
+import { CreateUserCommandDto } from '../../dtos';
 
 describe('CreateUserUseCase', () => {
   let useCase: CreateUserUseCase;
@@ -56,13 +57,17 @@ describe('CreateUserUseCase', () => {
 
       userRepository.create.mockResolvedValue(mockUser);
 
-      const result = await useCase.execute({
+      const command: CreateUserCommandDto = {
         email: 'new@example.com',
         password: 'password123',
         role: 'ADMIN',
-      });
+      };
+
+      const result = await useCase.execute(command);
 
       expect(result).toBeDefined();
+      expect(result.email).toBe('new@example.com');
+      expect(result.role).toBe('ADMIN');
       expect(userRepository.findByEmail).toHaveBeenCalledWith('new@example.com');
     });
 
@@ -75,27 +80,27 @@ describe('CreateUserUseCase', () => {
 
       userRepository.findByEmail.mockResolvedValue(existingUser);
 
-      await expect(
-        useCase.execute({
-          email: 'existing@example.com',
-          password: 'password123',
-          role: 'ADMIN',
-        }),
-      ).rejects.toThrow(UserAlreadyExistsError);
+      const command: CreateUserCommandDto = {
+        email: 'existing@example.com',
+        password: 'password123',
+        role: 'ADMIN',
+      };
+
+      await expect(useCase.execute(command)).rejects.toThrow(UserAlreadyExistsError);
     });
 
     it('should throw WarehouseNotFoundError if warehouse not found for OPERATOR', async () => {
       userRepository.findByEmail.mockResolvedValue(null);
       warehouseValidator.existsAndIsActive.mockResolvedValue(false);
 
-      await expect(
-        useCase.execute({
-          email: 'operator@example.com',
-          password: 'password123',
-          role: 'OPERATOR',
-          warehouseId: 'invalid-warehouse-id',
-        }),
-      ).rejects.toThrow(WarehouseNotFoundError);
+      const command: CreateUserCommandDto = {
+        email: 'operator@example.com',
+        password: 'password123',
+        role: 'OPERATOR',
+        warehouseId: 'invalid-warehouse-id',
+      };
+
+      await expect(useCase.execute(command)).rejects.toThrow(WarehouseNotFoundError);
     });
   });
 });

@@ -4,6 +4,7 @@ import { USER_REPOSITORY } from '../../domain/ports/user.repository.port';
 import { InvalidRefreshTokenError, UserInactiveError } from '../../domain/errors/auth.errors';
 import type { ITokenGenerator } from '../ports/token-generator.port';
 import { TOKEN_GENERATOR } from '../ports/token-generator.port';
+import { AuthResultDto, RefreshTokenCommandDto } from '../dtos';
 
 @Injectable()
 export class RefreshTokenUseCase {
@@ -14,12 +15,9 @@ export class RefreshTokenUseCase {
     private readonly tokenGenerator: ITokenGenerator,
   ) {}
 
-  async execute(refreshToken: string): Promise<{
-    accessToken: string;
-    refreshToken: string;
-  }> {
+  async execute(command: RefreshTokenCommandDto): Promise<AuthResultDto> {
     // 1. Validar refresh token y extraer payload
-    const payload = this.tokenGenerator.validateRefreshToken(refreshToken);
+    const payload = this.tokenGenerator.validateRefreshToken(command.refreshToken);
     if (!payload) {
       throw new InvalidRefreshTokenError();
     }

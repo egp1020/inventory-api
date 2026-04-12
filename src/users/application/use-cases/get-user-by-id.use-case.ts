@@ -3,6 +3,7 @@ import type { IUserRepository } from '../../domain/ports/user.repository.port';
 import { USER_REPOSITORY } from '../../domain/ports/user.repository.port';
 import { UserNotFoundError } from '../../domain/errors/user.errors';
 import { User } from '../../domain/entities/user.entity';
+import { UserResultDto } from '../dtos';
 
 @Injectable()
 export class GetUserByIdUseCase {
@@ -11,11 +12,22 @@ export class GetUserByIdUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(id: string): Promise<User> {
+  async execute(id: string): Promise<UserResultDto> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new UserNotFoundError(id);
     }
-    return user;
+    return this.mapToUserResultDto(user);
+  }
+
+  private mapToUserResultDto(user: User): UserResultDto {
+    return {
+      id: user.id,
+      email: user.email.getValue(),
+      role: user.role,
+      warehouseId: user.warehouseId,
+      createdAt: user.createdAt,
+      isActive: user.isActive(),
+    };
   }
 }
