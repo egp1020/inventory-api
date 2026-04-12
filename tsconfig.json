@@ -25,7 +25,8 @@
       "@shared/*": ["src/shared/*"],
       "@database/*": ["src/database/*"],
       "@auth/*": ["src/auth/*"],
-      "@users/*": ["src/users/*"]
+      "@users/*": ["src/users/*"],
+      "@warehouses/*": ["src/warehouses/*"]
     }
   }
 }

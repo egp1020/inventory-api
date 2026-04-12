@@ -42,6 +42,7 @@ model Warehouse {
   location  String
   capacity  Int
   isActive  Boolean         @default(true) @map("is_active")
+  createdAt DateTime        @default(now()) @map("created_at")
   users     User[]
   movements StockMovement[]
   deletedAt DateTime?       @map("deleted_at")
