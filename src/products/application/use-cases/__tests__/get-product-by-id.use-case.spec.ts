@@ -48,6 +48,7 @@ describe('GetProductByIdUseCase', () => {
 
       expect(result).toBeInstanceOf(ProductResultDto);
       expect(result.sku).toBe('TEST001');
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockRepository.findById).toHaveBeenCalledWith('123');
     });
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@database/prisma/prisma.service';
-import { Movement, MovementType } from '@movements/domain';
+import { Movement } from '@movements/domain';
 import { IMovementRepository } from '@movements/domain/ports';
 import {
   ProductNotFoundForMovementError,
@@ -87,6 +87,7 @@ export class MovementRepositoryAdapter implements IMovementRepository {
       productId: movement.getProductId(),
       warehouseId: movement.getWarehouseId(),
       userId: movement.getUserId(),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       type: movement.getTypeValue() as any, // Cast para hacer match con enum de Prisma
       quantity: movement.getQuantityValue(),
       notes: movement.getNotes(),
@@ -128,6 +129,7 @@ export class MovementRepositoryAdapter implements IMovementRepository {
       where: {
         productId,
         warehouseId,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type: 'ENTRADA' as any,
       },
       _sum: {
@@ -139,6 +141,7 @@ export class MovementRepositoryAdapter implements IMovementRepository {
       where: {
         productId,
         warehouseId,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type: 'SALIDA' as any,
       },
       _sum: {
@@ -167,6 +170,7 @@ export class MovementRepositoryAdapter implements IMovementRepository {
     limit: number;
     totalPages: number;
   }> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {};
 
     if (productId) {
@@ -176,6 +180,7 @@ export class MovementRepositoryAdapter implements IMovementRepository {
       where.warehouseId = warehouseId;
     }
     if (type) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       where.type = type as any;
     }
     if (startDate && endDate) {

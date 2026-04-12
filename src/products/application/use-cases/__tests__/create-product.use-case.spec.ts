@@ -7,7 +7,7 @@ import {
   CreateProductCommandDto,
   ProductResultDto,
 } from '@products/application/dtos';
-import { Product, SKU } from '@products/domain';
+import { Product } from '@products/domain';
 import { IProductRepository } from '@products/domain';
 
 describe('CreateProductUseCase', () => {

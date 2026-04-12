@@ -1,4 +1,3 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { GetMovementHistoryReportUseCase } from '../get-movement-history-report.use-case';
 import {
   MovementHistoryItemDto,

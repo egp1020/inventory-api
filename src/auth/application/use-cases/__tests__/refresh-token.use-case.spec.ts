@@ -60,10 +60,12 @@ describe('RefreshTokenUseCase', () => {
         accessToken: 'new-access-token',
         refreshToken: 'new-refresh-token',
       });
-      expect(tokenGenerator.validateRefreshToken).toHaveBeenCalledWith(
-        refreshToken,
-      );
-      expect(userRepository.findById).toHaveBeenCalledWith(userId);
+
+      expect(
+        tokenGenerator.validateRefreshToken as jest.Mock,
+      ).toHaveBeenCalledWith(refreshToken);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(userRepository.findById as jest.Mock).toHaveBeenCalledWith(userId);
     });
 
     it('should throw InvalidRefreshTokenError when token is invalid', async () => {

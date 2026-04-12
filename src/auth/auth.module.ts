@@ -6,14 +6,8 @@ import { PrismaModule } from '@database/prisma/prisma.module';
 // Domain + Application
 import { LoginUseCase } from './application/use-cases/login.use-case';
 import { RefreshTokenUseCase } from './application/use-cases/refresh-token.use-case';
-import {
-  PASSWORD_HASHER,
-  IPasswordHasher,
-} from './application/ports/password-hasher.port';
-import {
-  TOKEN_GENERATOR,
-  ITokenGenerator,
-} from './application/ports/token-generator.port';
+import { PASSWORD_HASHER } from './application/ports/password-hasher.port';
+import { TOKEN_GENERATOR } from './application/ports/token-generator.port';
 import { USER_REPOSITORY } from './domain/ports/user.repository.port';
 
 // Infrastructure
