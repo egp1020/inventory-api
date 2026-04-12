@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IMovementRepository } from '@movements/domain/ports';
+import { Movement } from '@movements/domain';
 import {
   MovementResultDto,
   PaginatedMovementResultDto,
