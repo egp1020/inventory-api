@@ -44,7 +44,7 @@ describe('GetAlertsReportUseCase', () => {
         .mockResolvedValue(new AlertsReportResultDto(mockAlerts)),
     };
 
-    useCase = new GetAlertsReportUseCase(mockRepository as IReportRepository);
+    useCase = new GetAlertsReportUseCase(mockRepository);
   });
 
   it('should get alerts report', async () => {
@@ -96,7 +96,7 @@ describe('GetAlertsReportUseCase', () => {
       .fn()
       .mockResolvedValue(new AlertsReportResultDto([]));
 
-    useCase = new GetAlertsReportUseCase(mockRepository as IReportRepository);
+    useCase = new GetAlertsReportUseCase(mockRepository);
 
     // Act
     const result = await useCase.execute();

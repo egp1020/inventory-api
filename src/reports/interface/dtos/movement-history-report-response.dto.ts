@@ -68,7 +68,9 @@ export class MovementHistoryReportResponseDto {
   totalPages!: number;
 
   constructor(result: MovementHistoryReportResultDto) {
-    this.data = result.data.map((m) => new MovementHistoryItemResponseDto(m));
+    this.data = result.data.map(
+      (m: MovementHistoryItemDto) => new MovementHistoryItemResponseDto(m),
+    );
     this.page = result.page;
     this.limit = result.limit;
     this.total = result.total;

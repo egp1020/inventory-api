@@ -90,7 +90,9 @@
       "^@auth/(.*)$": "<rootDir>/auth/$1",
       "^@users/(.*)$": "<rootDir>/users/$1",
       "^@warehouses/(.*)$": "<rootDir>/warehouses/$1",
-      "^@products/(.*)$": "<rootDir>/products/$1"
+      "^@products/(.*)$": "<rootDir>/products/$1",
+      "^@movements/(.*)$": "<rootDir>/movements/$1",
+      "^@reports/(.*)": "<rootDir>/reports/$1"
     }
   },
   "pnpm": {

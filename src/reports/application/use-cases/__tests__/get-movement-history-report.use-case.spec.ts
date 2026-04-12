@@ -44,9 +44,7 @@ describe('GetMovementHistoryReportUseCase', () => {
         ),
     };
 
-    useCase = new GetMovementHistoryReportUseCase(
-      mockRepository as IReportRepository,
-    );
+    useCase = new GetMovementHistoryReportUseCase(mockRepository);
   });
 
   it('should get movement history report with default pagination', async () => {
@@ -196,9 +194,7 @@ describe('GetMovementHistoryReportUseCase', () => {
       .fn()
       .mockResolvedValue(new MovementHistoryReportResultDto([], 0, 1, 10, 0));
 
-    useCase = new GetMovementHistoryReportUseCase(
-      mockRepository as IReportRepository,
-    );
+    useCase = new GetMovementHistoryReportUseCase(mockRepository);
 
     // Act
     const result = await useCase.execute();

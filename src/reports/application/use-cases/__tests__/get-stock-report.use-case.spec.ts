@@ -25,7 +25,7 @@ describe('GetStockReportUseCase', () => {
         ),
     };
 
-    useCase = new GetStockReportUseCase(mockRepository as IReportRepository);
+    useCase = new GetStockReportUseCase(mockRepository);
   });
 
   it('should get stock report for a warehouse', async () => {
@@ -60,7 +60,7 @@ describe('GetStockReportUseCase', () => {
         new StockReportResultDto('warehouse-empty', 'Almacén Vacío', []),
       );
 
-    useCase = new GetStockReportUseCase(mockRepository as IReportRepository);
+    useCase = new GetStockReportUseCase(mockRepository);
 
     // Act
     const result = await useCase.execute('warehouse-empty');
@@ -77,7 +77,7 @@ describe('GetStockReportUseCase', () => {
       .fn()
       .mockRejectedValue(new Error('Warehouse not found'));
 
-    useCase = new GetStockReportUseCase(mockRepository as IReportRepository);
+    useCase = new GetStockReportUseCase(mockRepository);
 
     // Act & Assert
     await expect(useCase.execute('invalid-warehouse')).rejects.toThrow(

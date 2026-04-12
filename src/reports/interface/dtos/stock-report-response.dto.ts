@@ -58,7 +58,9 @@ export class StockReportResponseDto {
   constructor(result: StockReportResultDto) {
     this.warehouseId = result.warehouseId;
     this.warehouseName = result.warehouseName;
-    this.items = result.items.map((i) => new StockReportItemResponseDto(i));
+    this.items = result.items.map(
+      (i: StockReportItemDto) => new StockReportItemResponseDto(i),
+    );
     this.totalProducts = result.totalProducts;
     this.lowStockCount = result.lowStockCount;
   }

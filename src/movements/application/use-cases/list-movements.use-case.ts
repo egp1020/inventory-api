@@ -39,7 +39,7 @@ export class ListMovementsUseCase {
     );
 
     const data = result.data.map(
-      (m) =>
+      (m: Movement) =>
         new MovementResultDto(
           m.getId(),
           m.getProductId(),

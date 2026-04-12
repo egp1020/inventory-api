@@ -41,7 +41,7 @@ describe('ListMovementsUseCase', () => {
       }),
     };
 
-    useCase = new ListMovementsUseCase(mockRepository as IMovementRepository);
+    useCase = new ListMovementsUseCase(mockRepository);
   });
 
   it('should list all movements with default pagination', async () => {
@@ -151,7 +151,7 @@ describe('ListMovementsUseCase', () => {
       totalPages: 0,
     });
 
-    useCase = new ListMovementsUseCase(mockRepository as IMovementRepository);
+    useCase = new ListMovementsUseCase(mockRepository);
 
     // Act
     const result = await useCase.execute();
