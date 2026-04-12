@@ -5,7 +5,7 @@ import {
 } from '@reports/application/dtos';
 
 /**
- * HTTP Response DTO para item de stock
+ * DTO de Respuesta HTTP para item de stock
  */
 export class StockReportItemResponseDto {
   @ApiProperty({ example: 'a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6' })
@@ -37,7 +37,7 @@ export class StockReportItemResponseDto {
 }
 
 /**
- * HTTP Response DTO para reporte de stock
+ * DTO de Respuesta HTTP para reporte de stock
  */
 export class StockReportResponseDto {
   @ApiProperty({ example: 'b1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6' })

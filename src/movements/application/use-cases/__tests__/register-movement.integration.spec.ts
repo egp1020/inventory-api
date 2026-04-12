@@ -1,8 +1,5 @@
 import { RegisterMovementUseCase } from '../register-movement.use-case';
-import {
-  RegisterMovementCommandDto,
-  MovementResultDto,
-} from '../../dtos';
+import { RegisterMovementCommandDto, MovementResultDto } from '../../dtos';
 import { Movement } from '../../../domain';
 import {
   ProductNotFoundForMovementError,

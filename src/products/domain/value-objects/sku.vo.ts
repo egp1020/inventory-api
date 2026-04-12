@@ -2,9 +2,9 @@ import { InvalidSKUError } from '../errors/product.errors';
 
 /**
  * SKU Value Object
- * Encapsula la validación del código SKU de un producto
- * Patrón: letras mayúsculas y números, mínimo 4 máximo 20 caracteres
- * Ejemplos: PROD001, SKU-A1, ABC123456
+ * Encapsulates SKU code validation for a product
+ * Pattern: uppercase letters and numbers, minimum 4 maximum 20 characters
+ * Examples: PROD001, SKU-A1, ABC123456
  */
 export class SKU {
   private readonly value: string;
@@ -18,13 +18,13 @@ export class SKU {
 
     if (trimmed.length < 4 || trimmed.length > 20) {
       throw new InvalidSKUError(
-        'debe tener entre 4 y 20 caracteres (letras mayúsculas y números)',
+        'must have between 4 and 20 characters (uppercase letters and numbers)',
       );
     }
 
     if (!/^[A-Z0-9-]*$/.test(trimmed)) {
       throw new InvalidSKUError(
-        'solo puede contener letras mayúsculas, números y guiones',
+        'can only contain uppercase letters, numbers and hyphens',
       );
     }
 

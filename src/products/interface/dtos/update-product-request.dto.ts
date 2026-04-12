@@ -2,7 +2,7 @@ import { IsString, IsInt, Min, Length, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
- * HTTP Request DTO
+ * DTO de Solicitud HTTP
  * Valida y transforma entrada HTTP para UpdateProductCommandDto
  */
 export class UpdateProductRequestDto {
@@ -26,7 +26,7 @@ export class UpdateProductRequestDto {
   description?: string;
 
   @ApiProperty({
-    description: 'Unit of measurement',
+    description: 'Unidad de medida',
     example: 'units',
     required: false,
   })
@@ -36,7 +36,7 @@ export class UpdateProductRequestDto {
   unit?: string;
 
   @ApiProperty({
-    description: 'Minimum stock alert threshold',
+    description: 'Umbral mínimo de alerta de stock',
     example: 15,
     required: false,
   })

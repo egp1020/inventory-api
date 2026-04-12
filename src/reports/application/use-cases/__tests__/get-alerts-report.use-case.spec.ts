@@ -74,7 +74,7 @@ describe('GetAlertsReportUseCase', () => {
     const result = await useCase.execute();
 
     // Assert
-    // Monitor tiene stock 2 de mínimo 30 (6.7% < 10%)
+    // Monitor has stock 2 of minimum 30 (6.7% < 10%)
     expect(result.criticalCount).toBeGreaterThan(0);
   });
 

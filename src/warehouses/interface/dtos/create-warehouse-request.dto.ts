@@ -2,12 +2,12 @@ import { IsString, IsInt, Min, Max, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
- * HTTP Request DTO
+ * DTO de Solicitud HTTP
  * Valida y transforma entrada HTTP para CreateWarehouseCommandDto
  */
 export class CreateWarehouseRequestDto {
   @ApiProperty({
-    description: 'Warehouse name',
+    description: 'Nombre de la bodega',
     example: 'Main Warehouse',
   })
   @IsString()
@@ -15,7 +15,7 @@ export class CreateWarehouseRequestDto {
   name!: string;
 
   @ApiProperty({
-    description: 'Warehouse location',
+    description: 'Ubicación de la bodega',
     example: 'Madrid, Spain',
   })
   @IsString()
@@ -23,7 +23,7 @@ export class CreateWarehouseRequestDto {
   location!: string;
 
   @ApiProperty({
-    description: 'Maximum capacity in units',
+    description: 'Capacidad máxima en unidades',
     example: 5000,
   })
   @IsInt()

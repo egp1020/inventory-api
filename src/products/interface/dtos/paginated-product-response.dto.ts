@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ProductResponseDto } from './product-response.dto';
 
 /**
- * HTTP Response DTO for paginated list
+ * DTO de Respuesta HTTP for paginated list
  */
 export class PaginatedProductResponseDto {
   @ApiProperty({

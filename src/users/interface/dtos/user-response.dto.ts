@@ -4,20 +4,20 @@ import { Role } from '@prisma/client';
 export class UserResponseDto {
   @ApiProperty({
     example: '550e8400-e29b-41d4-a716-446655440000',
-    description: 'ID del usuario',
+    description: 'User ID',
   })
   id!: string;
 
   @ApiProperty({
     example: 'operator@warehouse.com',
-    description: 'Email del usuario',
+    description: 'User email',
   })
   email!: string;
 
   @ApiProperty({
     example: 'OPERATOR',
     enum: ['ADMIN', 'OPERATOR'],
-    description: 'Rol del usuario',
+    description: 'User role',
   })
   role!: Role;
 
@@ -38,13 +38,13 @@ export class UserResponseDto {
 export class PaginatedUsersResponseDto {
   @ApiProperty({
     type: [UserResponseDto],
-    description: 'Lista de usuarios',
+    description: 'List of users',
   })
   data!: UserResponseDto[];
 
   @ApiProperty({
     example: 10,
-    description: 'Total de usuarios',
+    description: 'Total users',
   })
   total!: number;
 

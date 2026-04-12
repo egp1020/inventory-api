@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { WarehouseResponseDto } from './warehouse-response.dto';
+import { MovementResponseDto } from './movement-response.dto';
 
 /**
- * DTO de Respuesta HTTP for paginated list
+ * DTO de Respuesta HTTP para listado paginado de movimientos
  */
-export class PaginatedWarehouseResponseDto {
+export class PaginatedMovementResponseDto {
   @ApiProperty({
-    description: 'Array of warehouses',
-    type: [WarehouseResponseDto],
+    description: 'Array of movements',
+    type: [MovementResponseDto],
   })
-  data: WarehouseResponseDto[];
+  data: MovementResponseDto[];
 
   @ApiProperty({
     description: 'Current page number',
@@ -24,19 +24,19 @@ export class PaginatedWarehouseResponseDto {
   limit: number;
 
   @ApiProperty({
-    description: 'Total number of warehouses',
-    example: 25,
+    description: 'Total number of movements',
+    example: 50,
   })
   total: number;
 
   @ApiProperty({
     description: 'Total number of pages',
-    example: 3,
+    example: 5,
   })
   totalPages: number;
 
   constructor(
-    data: WarehouseResponseDto[],
+    data: MovementResponseDto[],
     page: number,
     limit: number,
     total: number,

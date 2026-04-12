@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { WarehouseResultDto } from '@warehouses/application/dtos';
 
 /**
- * HTTP Response DTO
+ * DTO de Respuesta HTTP
  * Transforma WarehouseResultDto a respuesta HTTP con Swagger docs
  */
 export class WarehouseResponseDto {
@@ -13,25 +13,25 @@ export class WarehouseResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'Warehouse name',
+    description: 'Nombre de la bodega',
     example: 'Main Warehouse',
   })
   name: string;
 
   @ApiProperty({
-    description: 'Warehouse location',
+    description: 'Ubicación de la bodega',
     example: 'Madrid, Spain',
   })
   location: string;
 
   @ApiProperty({
-    description: 'Maximum capacity in units',
+    description: 'Capacidad máxima en unidades',
     example: 5000,
   })
   capacity: number;
 
   @ApiProperty({
-    description: 'Is warehouse active',
+    description: '¿Está activa la bodega?',
     example: true,
   })
   isActive: boolean;

@@ -55,8 +55,8 @@ export class UsersController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Listar usuarios',
-    description: 'Solo ADMIN. Retorna lista paginada de usuarios activos',
+    summary: 'List users',
+    description: 'Admin only. Returns paginated list of active users',
   })
   @ApiResponse({
     status: 200,
@@ -80,7 +80,7 @@ export class UsersController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Obtener usuario por ID',
+    summary: 'Get user by ID',
     description: 'Solo ADMIN',
   })
   @ApiResponse({
@@ -100,13 +100,13 @@ export class UsersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
-    summary: 'Crear usuario',
+    summary: 'Create user',
     description:
       'Solo ADMIN. Crea un nuevo usuario y asigna bodega si es OPERATOR',
   })
   @ApiResponse({
     status: 201,
-    description: 'Usuario creado',
+    description: 'Usuario created',
     type: UserResponseDto,
   })
   @ApiResponse({
@@ -128,12 +128,12 @@ export class UsersController {
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Actualizar usuario',
-    description: 'Solo ADMIN. Permite cambiar email, rol y bodega',
+    summary: 'Update user',
+    description: 'Admin only. Allows changing email, role and warehouse',
   })
   @ApiResponse({
     status: 200,
-    description: 'Usuario actualizado',
+    description: 'Usuario updated',
     type: UserResponseDto,
   })
   @ApiResponse({
@@ -159,12 +159,12 @@ export class UsersController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
-    summary: 'Eliminar usuario',
+    summary: 'Delete user',
     description: 'Solo ADMIN. Soft delete (marca como inactivo)',
   })
   @ApiResponse({
     status: 204,
-    description: 'Usuario eliminado',
+    description: 'Usuario deleted',
   })
   @ApiResponse({
     status: 404,

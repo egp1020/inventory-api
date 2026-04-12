@@ -5,8 +5,8 @@ import { IProductRepository } from '@products/domain/ports';
 
 /**
  * ProductRepositoryAdapter
- * Implementa IProductRepository usando Prisma
- * Adapta la persistencia a la interfaz definida en domain
+ * Implements IProductRepository using Prisma
+ * Adapts persistence to the interface defined in domain
  */
 @Injectable()
 export class ProductRepositoryAdapter implements IProductRepository {
@@ -31,22 +31,22 @@ export class ProductRepositoryAdapter implements IProductRepository {
 
     if (existing) {
       this.logger.debug(
-        `Actualizando producto: id=${product.getId()}, sku=${product.getSKUValue()}`,
+        `Updating product: id=${product.getId()}, sku=${product.getSKUValue()}`,
       );
       await this.prisma.product.update({
         where: { id: product.getId() },
         data,
       });
       this.logger.log(
-        `Producto actualizado: id=${product.getId()}, sku=${product.getSKUValue()}`,
+        `Product updated: id=${product.getId()}, sku=${product.getSKUValue()}`,
       );
     } else {
       this.logger.debug(
-        `Creando producto: sku=${product.getSKUValue()}, nombre=${product.getName()}`,
+        `Creating product: sku=${product.getSKUValue()}, name=${product.getName()}`,
       );
       await this.prisma.product.create({ data });
       this.logger.log(
-        `Producto creado: id=${product.getId()}, sku=${product.getSKUValue()}`,
+        `Product created: id=${product.getId()}, sku=${product.getSKUValue()}`,
       );
     }
   }
@@ -162,10 +162,10 @@ export class ProductRepositoryAdapter implements IProductRepository {
   async delete(id: string): Promise<void> {
     const product = await this.findById(id);
     if (product) {
-      this.logger.debug(`Eliminando producto: id=${id}`);
+      this.logger.debug(`Deleting product: id=${id}`);
       product.softDelete();
       await this.save(product);
-      this.logger.log(`Producto eliminado (soft delete): id=${id}`);
+      this.logger.log(`Product deleted (soft delete): id=${id}`);
     }
   }
 

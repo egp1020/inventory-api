@@ -19,7 +19,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async getStockReport(warehouseId: string): Promise<StockReportResultDto> {
-    // Obtener datos de la bodega
+    // Get datos de la bodega
     const warehouse = await this.prisma.warehouse.findUnique({
       where: { id: warehouseId, deletedAt: null },
     });
@@ -28,12 +28,12 @@ export class ReportRepositoryAdapter implements IReportRepository {
       throw new Error(`Warehouse ${warehouseId} not found`);
     }
 
-    // Obtener todos los productos activos
+    // Get todos los productos activos
     const products = await this.prisma.product.findMany({
       where: { deletedAt: null },
     });
 
-    // Para cada producto, calcular el stock en la bodega
+    // For each producto, calcular el stock en la bodega
     const items: StockReportItemDto[] = [];
 
     for (const product of products) {
@@ -75,7 +75,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
   }
 
   async getAlertsReport(): Promise<AlertsReportResultDto> {
-    // Obtener todos los productos con stock bajo
+    // Get todos los productos con stock bajo
     const products = await this.prisma.product.findMany({
       where: { deletedAt: null },
     });
@@ -83,7 +83,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
     const alerts: AlertItemDto[] = [];
 
     for (const product of products) {
-      // Obtener todas las bodegas
+      // Get todas las bodegas
       const warehouses = await this.prisma.warehouse.findMany({
         where: { deletedAt: null },
       });
@@ -112,7 +112,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
         const currentStock =
           (entries._sum.quantity || 0) - (exits._sum.quantity || 0);
 
-        // Si el stock está bajo, agregar a alertas
+        // If stock is low, add to alerts
         if (currentStock < product.minStockAlert) {
           alerts.push(
             new AlertItemDto(

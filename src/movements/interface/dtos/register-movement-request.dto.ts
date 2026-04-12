@@ -3,18 +3,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import { MovementType } from '@movements/domain';
 
 /**
- * HTTP Request DTO para registrar movimiento
+ * DTO de Solicitud HTTP para registrar movimiento
  */
 export class RegisterMovementRequestDto {
   @ApiProperty({
-    description: 'Product ID',
+    description: 'ID del producto',
     example: 'a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6',
   })
   @IsString()
   productId!: string;
 
   @ApiProperty({
-    description: 'Warehouse ID',
+    description: 'ID de bodega',
     example: 'b1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6',
   })
   @IsString()
@@ -29,7 +29,7 @@ export class RegisterMovementRequestDto {
   type!: MovementType;
 
   @ApiProperty({
-    description: 'Quantity to move',
+    description: 'Cantidad a mover',
     example: 100,
   })
   @IsInt()

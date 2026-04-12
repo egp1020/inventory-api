@@ -12,7 +12,7 @@ import { Role } from '@prisma/client';
 export class CreateUserDto {
   @ApiProperty({
     example: 'operator@warehouse.com',
-    description: 'Email del usuario',
+    description: 'User email',
   })
   @IsEmail()
   email!: string;
@@ -29,7 +29,7 @@ export class CreateUserDto {
   @ApiProperty({
     example: 'OPERATOR',
     enum: ['ADMIN', 'OPERATOR'],
-    description: 'Rol del usuario',
+    description: 'User role',
   })
   @IsEnum(['ADMIN', 'OPERATOR'])
   role!: Role;

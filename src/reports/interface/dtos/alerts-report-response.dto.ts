@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AlertItemDto, AlertsReportResultDto } from '@reports/application/dtos';
 
 /**
- * HTTP Response DTO para item de alerta
+ * DTO de Respuesta HTTP para item de alerta
  */
 export class AlertItemResponseDto {
   @ApiProperty({ example: 'a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6' })
@@ -26,7 +26,7 @@ export class AlertItemResponseDto {
   @ApiProperty({ example: 50 })
   minStockAlert!: number;
 
-  @ApiProperty({ example: 45, description: 'Cantidad para alcanzar el mínimo' })
+  @ApiProperty({ example: 45, description: 'Quantity to reach minimum' })
   stockDeficit!: number;
 
   constructor(item: AlertItemDto) {
@@ -42,7 +42,7 @@ export class AlertItemResponseDto {
 }
 
 /**
- * HTTP Response DTO para reporte de alertas
+ * DTO de Respuesta HTTP para reporte de alertas
  */
 export class AlertsReportResponseDto {
   @ApiProperty({ type: [AlertItemResponseDto] })
@@ -53,7 +53,7 @@ export class AlertsReportResponseDto {
 
   @ApiProperty({
     example: 1,
-    description: 'Alertas críticas (stock < 10% del mínimo)',
+    description: 'Critical alerts (stock < 10% of minimum)',
   })
   criticalCount!: number;
 

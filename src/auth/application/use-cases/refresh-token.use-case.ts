@@ -19,7 +19,7 @@ export class RefreshTokenUseCase {
   ) {}
 
   async execute(command: RefreshTokenCommandDto): Promise<AuthResultDto> {
-    // 1. Validar refresh token y extraer payload
+    // 1. Validate refresh token and extract payload
     const payload = this.tokenGenerator.validateRefreshToken(
       command.refreshToken,
     );
@@ -27,18 +27,18 @@ export class RefreshTokenUseCase {
       throw new InvalidRefreshTokenError();
     }
 
-    // 2. Buscar usuario por ID extraído del token
+    // 2. Find user by ID extracted from token
     const user = await this.userRepository.findById(payload.sub);
     if (!user) {
       throw new InvalidRefreshTokenError();
     }
 
-    // 3. Verificar que el usuario esté activo
+    // 3. Verify user is active
     if (!user.isActive()) {
       throw new UserInactiveError();
     }
 
-    // 4. Generar nuevos tokens
+    // 4. Generate new tokens
     const newAccessToken = this.tokenGenerator.generateAccessToken({
       sub: user.id,
       email: user.email.getValue(),

@@ -11,7 +11,7 @@ export class UserRepositoryAdapter implements IUserRepository {
 
   async create(user: User): Promise<User> {
     this.logger.debug(
-      `Creando usuario: email=${user.email.getValue()}, rol=${user.role}`,
+      `Creating usuario: email=${user.email.getValue()}, rol=${user.role}`,
     );
     const userRaw = await this.prisma.user.create({
       data: {
@@ -23,7 +23,7 @@ export class UserRepositoryAdapter implements IUserRepository {
       },
     });
     this.logger.log(
-      `Usuario creado: id=${user.id}, email=${user.email.getValue()}`,
+      `Usuario created: id=${user.id}, email=${user.email.getValue()}`,
     );
     return this.toDomain(userRaw);
   }
@@ -67,7 +67,7 @@ export class UserRepositoryAdapter implements IUserRepository {
   }
 
   async update(id: string, user: Partial<User>): Promise<User> {
-    this.logger.debug(`Actualizando usuario: id=${id}`);
+    this.logger.debug(`Updating user: id=${id}`);
     const userRaw = await this.prisma.user.update({
       where: { id },
       data: {
@@ -76,19 +76,17 @@ export class UserRepositoryAdapter implements IUserRepository {
         warehouseId: user.warehouseId,
       },
     });
-    this.logger.log(
-      `Usuario actualizado: id=${id}, email=${userRaw.email}`,
-    );
+    this.logger.log(`Usuario updated: id=${id}, email=${userRaw.email}`);
     return this.toDomain(userRaw);
   }
 
   async softDelete(id: string): Promise<void> {
-    this.logger.debug(`Eliminando usuario (soft delete): id=${id}`);
+    this.logger.debug(`Deleting user (soft delete): id=${id}`);
     await this.prisma.user.update({
       where: { id },
       data: { deletedAt: new Date() },
     });
-    this.logger.log(`Usuario eliminado (soft delete): id=${id}`);
+    this.logger.log(`Usuario deleted (soft delete): id=${id}`);
   }
 
   async existsByEmailExcludingId(
