@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   Capacity,
-  IWarehouseRepository,
   WarehouseNotFoundError,
 } from '@warehouses/domain';
+import type { IWarehouseRepository } from '@warehouses/domain';
 import {
   UpdateWarehouseCommandDto,
   WarehouseResultDto,
