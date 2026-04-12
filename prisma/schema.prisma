@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  OPERATOR
+}
+
+enum MovementType {
+  ENTRADA
+  SALIDA
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id               String          @id @default(uuid())
+  email            String          @unique
+  passwordHash     String          @map("password_hash")
+  role             Role
+  warehouseId      String?         @map("warehouse_id")
+  warehouse        Warehouse?      @relation(fields: [warehouseId], references: [id])
+  movements        StockMovement[]
+  refreshTokenHash String?         @map("refresh_token_hash")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  deletedAt        DateTime?       @map("deleted_at")
+
+  @@map("users")
+}
+
+model Warehouse {
+  id        String          @id @default(uuid())
+  name      String
+  location  String
+  capacity  Int
+  isActive  Boolean         @default(true) @map("is_active")
+  users     User[]
+  movements StockMovement[]
+  deletedAt DateTime?       @map("deleted_at")
+
+  @@map("warehouses")
+}
+
+model Product {
+  id            String          @id @default(uuid())
+  sku           String          @unique
+  name          String
+  description   String?
+  unit          String
+  minStockAlert Int             @default(0) @map("min_stock_alert")
+  movements     StockMovement[]
+  deletedAt     DateTime?       @map("deleted_at")
+
+  @@map("products")
+}
+
+model StockMovement {
+  id          String       @id @default(uuid())
+  productId   String       @map("product_id")
+  warehouseId String       @map("warehouse_id")
+  userId      String       @map("user_id")
+  type        MovementType
+  quantity    Int
+  notes       String?
+  createdAt   DateTime     @default(now()) @map("created_at")
+  product     Product      @relation(fields: [productId], references: [id])
+  warehouse   Warehouse    @relation(fields: [warehouseId], references: [id])
+  user        User         @relation(fields: [userId], references: [id])
+
+  @@index([warehouseId, productId])
+  @@index([productId, warehouseId, createdAt])
+  @@index([createdAt])
+  @@map("stock_movements")
+}
