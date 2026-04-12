@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IWarehouseRepository } from '@warehouses/domain';
+import type { IWarehouseRepository } from '@warehouses/domain';
 import { PaginatedWarehouseResultDto, WarehouseResultDto } from '@warehouses/application/dtos';
 
 const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');

@@ -57,6 +57,7 @@ model Product {
   description   String?
   unit          String
   minStockAlert Int             @default(0) @map("min_stock_alert")
+  createdAt     DateTime        @default(now()) @map("created_at")
   movements     StockMovement[]
   deletedAt     DateTime?       @map("deleted_at")
 

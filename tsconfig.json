@@ -26,7 +26,8 @@
       "@database/*": ["src/database/*"],
       "@auth/*": ["src/auth/*"],
       "@users/*": ["src/users/*"],
-      "@warehouses/*": ["src/warehouses/*"]
+      "@warehouses/*": ["src/warehouses/*"],
+      "@products/*": ["src/products/*"]
     }
   }
 }

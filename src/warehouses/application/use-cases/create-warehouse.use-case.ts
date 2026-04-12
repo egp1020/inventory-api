@@ -3,8 +3,8 @@ import { randomUUID } from 'crypto';
 import {
   Warehouse,
   Capacity,
-  IWarehouseRepository,
 } from '@warehouses/domain';
+import type { IWarehouseRepository } from '@warehouses/domain';
 import {
   CreateWarehouseCommandDto,
   WarehouseResultDto,

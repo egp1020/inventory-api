@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  IWarehouseRepository,
-  WarehouseNotFoundError,
-} from '@warehouses/domain';
+import { WarehouseNotFoundError } from '@warehouses/domain';
+import type { IWarehouseRepository } from '@warehouses/domain';
 import { WarehouseResultDto } from '@warehouses/application/dtos';
 
 const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
