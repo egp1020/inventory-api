@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@database/prisma/prisma.service';
 import { Movement } from '@movements/domain';
 import { IMovementRepository } from '@movements/domain/ports';
@@ -18,6 +18,8 @@ import {
  */
 @Injectable()
 export class MovementRepositoryAdapter implements IMovementRepository {
+  private readonly logger = new Logger(MovementRepositoryAdapter.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   /**
@@ -28,12 +30,19 @@ export class MovementRepositoryAdapter implements IMovementRepository {
     movement: Movement,
     validateExistence: boolean = true,
   ): Promise<void> {
+    this.logger.debug(
+      `Validando movimiento: producto=${movement.getProductId()}, bodega=${movement.getWarehouseId()}, tipo=${movement.getTypeValue()}, cantidad=${movement.getQuantityValue()}`,
+    );
+
     if (validateExistence) {
       // Validar que el producto existe
       const product = await this.prisma.product.findUnique({
         where: { id: movement.getProductId() },
       });
       if (!product) {
+        this.logger.warn(
+          `Producto no encontrado: id=${movement.getProductId()}`,
+        );
         throw new ProductNotFoundForMovementError(movement.getProductId());
       }
 
@@ -42,6 +51,9 @@ export class MovementRepositoryAdapter implements IMovementRepository {
         where: { id: movement.getWarehouseId() },
       });
       if (!warehouse) {
+        this.logger.warn(
+          `Bodega no encontrada: id=${movement.getWarehouseId()}`,
+        );
         throw new WarehouseNotFoundForMovementError(movement.getWarehouseId());
       }
 
@@ -50,6 +62,9 @@ export class MovementRepositoryAdapter implements IMovementRepository {
         where: { id: movement.getUserId() },
       });
       if (!user) {
+        this.logger.warn(
+          `Usuario no encontrado: id=${movement.getUserId()}`,
+        );
         throw new UserNotFoundForMovementError(movement.getUserId());
       }
 
@@ -58,6 +73,9 @@ export class MovementRepositoryAdapter implements IMovementRepository {
         user.role === 'OPERATOR' &&
         user.warehouseId !== movement.getWarehouseId()
       ) {
+        this.logger.warn(
+          `OPERATOR no autorizado: usuario=${movement.getUserId()}, bodega=${movement.getWarehouseId()}`,
+        );
         throw new UnauthorizedMovementError(
           movement.getUserId(),
           movement.getWarehouseId(),
@@ -71,7 +89,14 @@ export class MovementRepositoryAdapter implements IMovementRepository {
           movement.getWarehouseId(),
         );
 
+        this.logger.debug(
+          `Stock actual: producto=${movement.getProductId()}, bodega=${movement.getWarehouseId()}, stock=${currentStock}, requerido=${movement.getQuantityValue()}`,
+        );
+
         if (currentStock < movement.getQuantityValue()) {
+          this.logger.warn(
+            `Stock insuficiente: producto=${movement.getProductId()}, bodega=${movement.getWarehouseId()}, disponible=${currentStock}, requerido=${movement.getQuantityValue()}`,
+          );
           throw new InsufficientStockError(
             movement.getProductId(),
             movement.getWarehouseId(),
@@ -95,9 +120,13 @@ export class MovementRepositoryAdapter implements IMovementRepository {
     };
 
     // Usar transacción para asegurar atomicidad
+    this.logger.debug(`Guardando movimiento en transacción: id=${data.id}`);
     await this.prisma.$transaction(async (prisma) => {
       await prisma.stockMovement.create({ data });
     });
+    this.logger.log(
+      `Movimiento guardado exitosamente: id=${data.id}, tipo=${movement.getTypeValue()}`,
+    );
   }
 
   async findById(id: string): Promise<Movement | null> {
