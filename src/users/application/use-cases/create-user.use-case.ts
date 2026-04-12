@@ -7,7 +7,7 @@ import { User } from '../../domain/entities/user.entity';
 import { UserAlreadyExistsError, WarehouseNotFoundError } from '../../domain/errors/user.errors';
 import type { IPasswordHasher } from '../../../auth/application/ports/password-hasher.port';
 import { PASSWORD_HASHER } from '../../../auth/application/ports/password-hasher.port';
-import { Role } from '@prisma/client';
+import { CreateUserCommandDto, UserResultDto } from '../dtos';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -20,43 +20,51 @@ export class CreateUserUseCase {
     private readonly warehouseValidator: IWarehouseValidator,
   ) {}
 
-  async execute(input: {
-    email: string;
-    password: string;
-    role: Role;
-    warehouseId?: string | null;
-  }): Promise<User> {
+  async execute(command: CreateUserCommandDto): Promise<UserResultDto> {
     // 1. Verificar que el email no exista
-    const existingUser = await this.userRepository.findByEmail(input.email);
+    const existingUser = await this.userRepository.findByEmail(command.email);
     if (existingUser) {
-      throw new UserAlreadyExistsError(input.email);
+      throw new UserAlreadyExistsError(command.email);
     }
 
     // 2. Si es OPERATOR, validar que la bodega existe
-    if (input.role === 'OPERATOR' && input.warehouseId) {
-      const warehouseExists = await this.warehouseValidator.existsAndIsActive(input.warehouseId);
+    if (command.role === 'OPERATOR' && command.warehouseId) {
+      const warehouseExists = await this.warehouseValidator.existsAndIsActive(command.warehouseId);
       if (!warehouseExists) {
-        throw new WarehouseNotFoundError(input.warehouseId);
+        throw new WarehouseNotFoundError(command.warehouseId);
       }
     }
 
     // 3. Hash la contraseña
-    const passwordHash = await this.passwordHasher.hash(input.password);
+    const passwordHash = await this.passwordHasher.hash(command.password);
 
     // 4. Crear usuario
     const user = User.create({
       id: randomUUID(),
-      email: input.email,
+      email: command.email,
       passwordHash,
-      role: input.role,
-      warehouseId: input.role === 'OPERATOR' ? input.warehouseId || null : null,
+      role: command.role,
+      warehouseId: command.role === 'OPERATOR' ? command.warehouseId || null : null,
       createdAt: new Date(),
     });
 
     user.validateWarehouseAssignment(user.warehouseId);
 
     // 5. Persistir
-    return this.userRepository.create(user);
+    const createdUser = await this.userRepository.create(user);
+
+    return this.mapToUserResultDto(createdUser);
+  }
+
+  private mapToUserResultDto(user: User): UserResultDto {
+    return {
+      id: user.id,
+      email: user.email.getValue(),
+      role: user.role,
+      warehouseId: user.warehouseId,
+      createdAt: user.createdAt,
+      isActive: user.isActive(),
+    };
   }
 }
 

@@ -6,6 +6,7 @@ import type { IPasswordHasher } from '../ports/password-hasher.port';
 import { PASSWORD_HASHER } from '../ports/password-hasher.port';
 import type { ITokenGenerator } from '../ports/token-generator.port';
 import { TOKEN_GENERATOR } from '../ports/token-generator.port';
+import { AuthResultDto, LoginCommandDto } from '../dtos';
 
 @Injectable()
 export class LoginUseCase {
@@ -18,12 +19,9 @@ export class LoginUseCase {
     private readonly tokenGenerator: ITokenGenerator,
   ) {}
 
-  async execute(email: string, plainPassword: string): Promise<{
-    accessToken: string;
-    refreshToken: string;
-  }> {
+  async execute(command: LoginCommandDto): Promise<AuthResultDto> {
     // 1. Buscar usuario por email
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(command.email);
     if (!user) {
       throw new InvalidCredentialsError();
     }
@@ -35,7 +33,7 @@ export class LoginUseCase {
 
     // 3. Validar contraseña
     const isPasswordValid = await this.passwordHasher.compare(
-      plainPassword,
+      command.password,
       user.passwordHash,
     );
     if (!isPasswordValid) {

@@ -28,7 +28,7 @@ import { GetUserByIdUseCase } from '../application/use-cases/get-user-by-id.use-
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserResponseDto, PaginatedUsersResponseDto } from './dtos/user-response.dto';
-import { User } from '../domain/entities/user.entity';
+import { CreateUserCommandDto, UpdateUserCommandDto, UserResultDto, PaginatedUserResultDto } from '../application/dtos';
 
 @ApiTags('users')
 @ApiBearerAuth('access-token')
@@ -59,12 +59,12 @@ export class UsersController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ): Promise<PaginatedUsersResponseDto> {
-    const { data, total } = await this.listUsersUseCase.execute(page, limit);
+    const appResult: PaginatedUserResultDto = await this.listUsersUseCase.execute(page, limit);
     return {
-      data: data.map((u) => this.toResponse(u)),
-      total,
-      page,
-      limit,
+      data: appResult.data.map((u) => this.toResponse(u)),
+      total: appResult.total,
+      page: appResult.page,
+      limit: appResult.limit,
     };
   }
 
@@ -84,8 +84,8 @@ export class UsersController {
     description: 'Usuario no encontrado',
   })
   async getUserById(@Param('id') id: string): Promise<UserResponseDto> {
-    const user = await this.getUserByIdUseCase.execute(id);
-    return this.toResponse(user);
+    const appResult: UserResultDto = await this.getUserByIdUseCase.execute(id);
+    return this.toResponse(appResult);
   }
 
   @Post()
@@ -104,13 +104,14 @@ export class UsersController {
     description: 'Email ya existe',
   })
   async createUser(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
-    const user = await this.createUserUseCase.execute({
+    const command: CreateUserCommandDto = {
       email: dto.email,
       password: dto.password,
       role: dto.role,
       warehouseId: dto.warehouseId || null,
-    });
-    return this.toResponse(user);
+    };
+    const appResult: UserResultDto = await this.createUserUseCase.execute(command);
+    return this.toResponse(appResult);
   }
 
   @Patch(':id')
@@ -132,13 +133,13 @@ export class UsersController {
     @Param('id') id: string,
     @Body() dto: UpdateUserDto,
   ): Promise<UserResponseDto> {
-    const user = await this.updateUserUseCase.execute({
-      id,
+    const command: UpdateUserCommandDto = {
       email: dto.email,
       role: dto.role,
       warehouseId: dto.warehouseId,
-    });
-    return this.toResponse(user);
+    };
+    const appResult: UserResultDto = await this.updateUserUseCase.execute(id, command);
+    return this.toResponse(appResult);
   }
 
   @Delete(':id')
@@ -159,13 +160,13 @@ export class UsersController {
     await this.deleteUserUseCase.execute(id);
   }
 
-  private toResponse(user: User): UserResponseDto {
+  private toResponse(result: UserResultDto): UserResponseDto {
     return {
-      id: user.id,
-      email: user.email.getValue(),
-      role: user.role,
-      warehouseId: user.warehouseId,
-      createdAt: user.createdAt,
+      id: result.id,
+      email: result.email,
+      role: result.role,
+      warehouseId: result.warehouseId,
+      createdAt: result.createdAt,
     };
   }
 }

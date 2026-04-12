@@ -4,6 +4,7 @@ import { IPasswordHasher } from '../../ports/password-hasher.port';
 import { ITokenGenerator } from '../../ports/token-generator.port';
 import { User } from '../../../domain/entities/user.entity';
 import { InvalidCredentialsError, UserInactiveError } from '../../../domain/errors/auth.errors';
+import { LoginCommandDto } from '../../dtos';
 
 describe('LoginUseCase', () => {
   let useCase: LoginUseCase;
@@ -55,7 +56,8 @@ describe('LoginUseCase', () => {
       tokenGenerator.generateRefreshToken.mockReturnValue('refresh-token');
 
       // Act
-      const result = await useCase.execute(email, password);
+      const command: LoginCommandDto = { email, password };
+      const result = await useCase.execute(command);
 
       // Assert
       expect(result).toEqual({
@@ -71,9 +73,8 @@ describe('LoginUseCase', () => {
       userRepository.findByEmail.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(
-        useCase.execute('nonexistent@test.com', 'password123'),
-      ).rejects.toThrow(InvalidCredentialsError);
+      const command: LoginCommandDto = { email: 'nonexistent@test.com', password: 'password123' };
+      await expect(useCase.execute(command)).rejects.toThrow(InvalidCredentialsError);
     });
 
     it('should throw InvalidCredentialsError when password is invalid', async () => {
@@ -91,9 +92,8 @@ describe('LoginUseCase', () => {
       passwordHasher.compare.mockResolvedValue(false);
 
       // Act & Assert
-      await expect(
-        useCase.execute('admin@test.com', 'wrong-password'),
-      ).rejects.toThrow(InvalidCredentialsError);
+      const command: LoginCommandDto = { email: 'admin@test.com', password: 'wrong-password' };
+      await expect(useCase.execute(command)).rejects.toThrow(InvalidCredentialsError);
     });
 
     it('should throw UserInactiveError when user is deleted', async () => {
@@ -111,9 +111,8 @@ describe('LoginUseCase', () => {
       userRepository.findByEmail.mockResolvedValue(user);
 
       // Act & Assert
-      await expect(
-        useCase.execute('admin@test.com', 'password123'),
-      ).rejects.toThrow(UserInactiveError);
+      const command: LoginCommandDto = { email: 'admin@test.com', password: 'password123' };
+      await expect(useCase.execute(command)).rejects.toThrow(UserInactiveError);
     });
   });
 });
