@@ -36,6 +36,7 @@ describe('CreateProductUseCase', () => {
 
   describe('execute', () => {
     it('should create a product successfully', async () => {
+      // Arrange
       const command = new CreateProductCommandDto(
         'PROD001',
         'Laptop',
@@ -44,8 +45,10 @@ describe('CreateProductUseCase', () => {
         10,
       );
 
+      // Act
       const result = await useCase.execute(command);
 
+      // Assert
       expect(result).toBeInstanceOf(ProductResultDto);
       expect(result.sku).toBe('PROD001');
       expect(result.name).toBe('Laptop');
@@ -53,25 +56,30 @@ describe('CreateProductUseCase', () => {
     });
 
     it('should create product with valid SKU format', async () => {
+      // Arrange
       const command = new CreateProductCommandDto(
         'SKU-A1B2C3',
         'Mouse',
         'units',
       );
 
+      // Act
       const result = await useCase.execute(command);
 
+      // Assert
       expect(result.sku).toBe('SKU-A1B2C3');
       expect(mockRepository.save).toHaveBeenCalled();
     });
 
     it('should fail with invalid SKU', async () => {
+      // Arrange
       const command = new CreateProductCommandDto(
         'ABC',
         'Invalid SKU',
         'units',
       );
 
+      // Act & Assert
       await expect(useCase.execute(command)).rejects.toThrow();
     });
   });

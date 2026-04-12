@@ -36,6 +36,7 @@ describe('GetWarehouseByIdUseCase', () => {
 
   describe('execute', () => {
     it('should retrieve a warehouse by id', async () => {
+      // Arrange
       const warehouse = Warehouse.create(
         '123',
         'Test Warehouse',
@@ -45,8 +46,10 @@ describe('GetWarehouseByIdUseCase', () => {
 
       mockRepository.findById.mockResolvedValue(warehouse);
 
+      // Act
       const result = await useCase.execute('123');
 
+      // Assert
       expect(result).toBeInstanceOf(WarehouseResultDto);
       expect(result.name).toBe('Test Warehouse');
       // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -54,8 +57,10 @@ describe('GetWarehouseByIdUseCase', () => {
     });
 
     it('should throw error when warehouse not found', async () => {
+      // Arrange
       mockRepository.findById.mockResolvedValue(null);
 
+      // Act & Assert
       await expect(useCase.execute('non-existent')).rejects.toThrow(
         WarehouseNotFoundError,
       );

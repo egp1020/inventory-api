@@ -7,6 +7,7 @@ describe('ListMovementsUseCase', () => {
   let mockRepository: Partial<IMovementRepository>;
 
   beforeEach((): void => {
+    // Arrange
     const mockMovements = [
       Movement.restore(
         'mov-1',
@@ -44,8 +45,10 @@ describe('ListMovementsUseCase', () => {
   });
 
   it('should list all movements with default pagination', async () => {
+    // Act
     const result = await useCase.execute();
 
+    // Assert
     expect(result).toBeDefined();
     expect(result.data).toHaveLength(2);
     expect(result.total).toBe(2);
@@ -63,6 +66,7 @@ describe('ListMovementsUseCase', () => {
   });
 
   it('should list movements with filters', async () => {
+    // Act
     await useCase.execute(
       'prod-123',
       'warehouse-456',
@@ -73,6 +77,7 @@ describe('ListMovementsUseCase', () => {
       5,
     );
 
+    // Assert
     expect(mockRepository.listMovements).toHaveBeenCalledWith(
       'prod-123',
       'warehouse-456',
@@ -85,9 +90,11 @@ describe('ListMovementsUseCase', () => {
   });
 
   it('should list movements with date range', async () => {
+    // Arrange
     const startDate = new Date('2026-01-01');
     const endDate = new Date('2026-12-31');
 
+    // Act
     await useCase.execute(
       undefined,
       undefined,
@@ -98,6 +105,7 @@ describe('ListMovementsUseCase', () => {
       10,
     );
 
+    // Assert
     expect(mockRepository.listMovements).toHaveBeenCalledWith(
       undefined,
       undefined,
@@ -110,6 +118,7 @@ describe('ListMovementsUseCase', () => {
   });
 
   it('should handle pagination correctly', async () => {
+    // Act
     await useCase.execute(
       undefined,
       undefined,
@@ -120,6 +129,7 @@ describe('ListMovementsUseCase', () => {
       20,
     );
 
+    // Assert
     expect(mockRepository.listMovements).toHaveBeenCalledWith(
       undefined,
       undefined,
@@ -132,6 +142,7 @@ describe('ListMovementsUseCase', () => {
   });
 
   it('should return empty result when no movements found', async () => {
+    // Arrange
     mockRepository.listMovements = jest.fn().mockResolvedValue({
       data: [],
       total: 0,
@@ -141,8 +152,11 @@ describe('ListMovementsUseCase', () => {
     });
 
     useCase = new ListMovementsUseCase(mockRepository as IMovementRepository);
+
+    // Act
     const result = await useCase.execute();
 
+    // Assert
     expect(result.data).toHaveLength(0);
     expect(result.total).toBe(0);
   });

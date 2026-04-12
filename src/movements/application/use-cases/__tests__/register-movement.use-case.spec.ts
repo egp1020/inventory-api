@@ -8,6 +8,7 @@ describe('RegisterMovementUseCase', () => {
   let mockRepository: Partial<IMovementRepository>;
 
   beforeEach(() => {
+    // Arrange
     mockRepository = {
       save: jest.fn(),
     };
@@ -19,6 +20,7 @@ describe('RegisterMovementUseCase', () => {
   });
 
   it('should register an ENTRADA movement successfully', async () => {
+    // Arrange
     const command = new RegisterMovementCommandDto(
       'prod-123',
       'warehouse-456',
@@ -28,8 +30,10 @@ describe('RegisterMovementUseCase', () => {
       'Primera recepción',
     );
 
+    // Act
     const result = await useCase.execute(command);
 
+    // Assert
     expect(result).toBeDefined();
     expect(result.productId).toBe('prod-123');
     expect(result.warehouseId).toBe('warehouse-456');
@@ -39,6 +43,7 @@ describe('RegisterMovementUseCase', () => {
   });
 
   it('should register a SALIDA movement successfully', async () => {
+    // Arrange
     const command = new RegisterMovementCommandDto(
       'prod-123',
       'warehouse-456',
@@ -48,8 +53,10 @@ describe('RegisterMovementUseCase', () => {
       'Venta cliente XYZ',
     );
 
+    // Act
     const result = await useCase.execute(command);
 
+    // Assert
     expect(result).toBeDefined();
     expect(result.type).toBe('SALIDA');
     expect(result.quantity).toBe(30);
@@ -57,6 +64,7 @@ describe('RegisterMovementUseCase', () => {
   });
 
   it('should handle movement with optional notes', async () => {
+    // Arrange
     const command = new RegisterMovementCommandDto(
       'prod-123',
       'warehouse-456',
@@ -65,13 +73,16 @@ describe('RegisterMovementUseCase', () => {
       100,
     );
 
+    // Act
     const result = await useCase.execute(command);
 
+    // Assert
     expect(result.notes).toBeNull();
     expect(mockRepository.save).toHaveBeenCalled();
   });
 
   it('should throw error if repository.save fails', async () => {
+    // Arrange
     mockRepository.save = jest
       .fn()
       .mockRejectedValue(
@@ -86,6 +97,7 @@ describe('RegisterMovementUseCase', () => {
       50,
     );
 
+    // Act & Assert
     await expect(useCase.execute(command)).rejects.toThrow(
       InsufficientStockError,
     );
