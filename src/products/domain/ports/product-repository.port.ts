@@ -18,4 +18,5 @@ export interface IProductRepository {
     totalPages: number;
   }>;
   delete(id: string): Promise<void>;
+  hasMovements(productId: string): Promise<boolean>;
 }

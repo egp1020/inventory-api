@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ProductNotFoundError } from '@products/domain';
+import { ProductNotFoundError, ProductHasMovementsError } from '@products/domain';
 import type { IProductRepository } from '@products/domain';
 
 const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
@@ -7,6 +7,7 @@ const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 /**
  * DeleteProductUseCase
  * Realiza soft delete (marca como eliminada)
+ * Valida que el producto no tenga movimientos asociados
  * Depende de (ports): IProductRepository
  */
 @Injectable()
@@ -21,6 +22,12 @@ export class DeleteProductUseCase {
 
     if (!product) {
       throw new ProductNotFoundError(id);
+    }
+
+    // Verificar si el producto tiene movimientos
+    const hasMovements = await this.productRepository.hasMovements(id);
+    if (hasMovements) {
+      throw new ProductHasMovementsError(id);
     }
 
     product.softDelete();
