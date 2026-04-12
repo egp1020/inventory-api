@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IMovementRepository } from '@movements/domain/ports';
-import { MovementResultDto, PaginatedMovementResultDto } from '@movements/application/dtos';
+import {
+  MovementResultDto,
+  PaginatedMovementResultDto,
+} from '@movements/application/dtos';
 
 const MOVEMENT_REPOSITORY = Symbol('MOVEMENT_REPOSITORY');
 

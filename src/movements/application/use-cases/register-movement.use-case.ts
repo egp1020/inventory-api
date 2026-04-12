@@ -1,9 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IMovementRepository } from '@movements/domain/ports';
-import {
-  Movement,
-  MovementType,
-} from '@movements/domain';
+import { Movement, MovementType } from '@movements/domain';
 import { Quantity } from '@movements/domain/value-objects';
 import {
   RegisterMovementCommandDto,
@@ -25,14 +22,16 @@ export class RegisterMovementUseCase {
     private readonly movementRepository: IMovementRepository,
   ) {}
 
-  async execute(command: RegisterMovementCommandDto): Promise<MovementResultDto> {
+  async execute(
+    command: RegisterMovementCommandDto,
+  ): Promise<MovementResultDto> {
     // Crear el movimiento
     const quantity = Quantity.create(command.quantity);
     const movement = Movement.create(
       command.productId,
       command.warehouseId,
       command.userId,
-      command.type as MovementType,
+      command.type,
       quantity,
       command.notes,
     );
