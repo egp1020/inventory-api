@@ -1,4 +1,9 @@
-export { CreateProductCommandDto, UpdateProductCommandDto, ProductResultDto, PaginatedProductResultDto } from './dtos';
+export {
+  CreateProductCommandDto,
+  UpdateProductCommandDto,
+  ProductResultDto,
+  PaginatedProductResultDto,
+} from './dtos';
 export {
   CreateProductUseCase,
   GetProductByIdUseCase,

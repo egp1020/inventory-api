@@ -2,7 +2,10 @@ import { RefreshTokenUseCase } from '../refresh-token.use-case';
 import { IUserRepository } from '../../../domain/ports/user.repository.port';
 import { ITokenGenerator } from '../../ports/token-generator.port';
 import { User } from '../../../domain/entities/user.entity';
-import { InvalidRefreshTokenError, UserInactiveError } from '../../../domain/errors/auth.errors';
+import {
+  InvalidRefreshTokenError,
+  UserInactiveError,
+} from '../../../domain/errors/auth.errors';
 import { RefreshTokenCommandDto } from '../../dtos';
 
 describe('RefreshTokenUseCase', () => {
@@ -57,7 +60,9 @@ describe('RefreshTokenUseCase', () => {
         accessToken: 'new-access-token',
         refreshToken: 'new-refresh-token',
       });
-      expect(tokenGenerator.validateRefreshToken).toHaveBeenCalledWith(refreshToken);
+      expect(tokenGenerator.validateRefreshToken).toHaveBeenCalledWith(
+        refreshToken,
+      );
       expect(userRepository.findById).toHaveBeenCalledWith(userId);
     });
 
@@ -67,7 +72,9 @@ describe('RefreshTokenUseCase', () => {
 
       // Act & Assert
       const command: RefreshTokenCommandDto = { refreshToken: 'invalid-token' };
-      await expect(useCase.execute(command)).rejects.toThrow(InvalidRefreshTokenError);
+      await expect(useCase.execute(command)).rejects.toThrow(
+        InvalidRefreshTokenError,
+      );
     });
 
     it('should throw InvalidRefreshTokenError when user not found', async () => {
@@ -77,7 +84,9 @@ describe('RefreshTokenUseCase', () => {
 
       // Act & Assert
       const command: RefreshTokenCommandDto = { refreshToken: 'valid-token' };
-      await expect(useCase.execute(command)).rejects.toThrow(InvalidRefreshTokenError);
+      await expect(useCase.execute(command)).rejects.toThrow(
+        InvalidRefreshTokenError,
+      );
     });
 
     it('should throw UserInactiveError when user is deleted', async () => {

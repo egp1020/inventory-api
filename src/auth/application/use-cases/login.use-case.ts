@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IUserRepository } from '../../domain/ports/user.repository.port';
 import { USER_REPOSITORY } from '../../domain/ports/user.repository.port';
-import { InvalidCredentialsError, UserInactiveError } from '../../domain/errors/auth.errors';
+import {
+  InvalidCredentialsError,
+  UserInactiveError,
+} from '../../domain/errors/auth.errors';
 import type { IPasswordHasher } from '../ports/password-hasher.port';
 import { PASSWORD_HASHER } from '../ports/password-hasher.port';
 import type { ITokenGenerator } from '../ports/token-generator.port';

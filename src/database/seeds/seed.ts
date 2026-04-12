@@ -58,7 +58,9 @@ async function main() {
       warehouseId: warehouse1.id,
     },
   });
-  console.log(`✓ OPERATOR creado: ${operator.email} (asignado a ${warehouse1.name})`);
+  console.log(
+    `✓ OPERATOR creado: ${operator.email} (asignado a ${warehouse1.name})`,
+  );
 
   // 4. Crear 5 productos
   console.log('🏷️ Creando 5 productos...');

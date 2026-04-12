@@ -1,9 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import {
-  Warehouse,
-  Capacity,
-} from '@warehouses/domain';
+import { Warehouse, Capacity } from '@warehouses/domain';
 import type { IWarehouseRepository } from '@warehouses/domain';
 import {
   CreateWarehouseCommandDto,

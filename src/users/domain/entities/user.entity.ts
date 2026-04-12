@@ -79,7 +79,9 @@ export class User {
       updates.email ? new Email(updates.email) : this.email,
       this.passwordHash,
       updates.role ?? this.role,
-      updates.warehouseId !== undefined ? updates.warehouseId : this.warehouseId,
+      updates.warehouseId !== undefined
+        ? updates.warehouseId
+        : this.warehouseId,
       this.createdAt,
       this.deletedAt,
     );

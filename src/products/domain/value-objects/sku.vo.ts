@@ -1,3 +1,5 @@
+import { InvalidSKUError } from '../errors/product.errors';
+
 /**
  * SKU Value Object
  * Encapsula la validación del código SKU de un producto
@@ -15,14 +17,14 @@ export class SKU {
     const trimmed = sku.trim().toUpperCase();
 
     if (trimmed.length < 4 || trimmed.length > 20) {
-      throw new Error(
-        'SKU must be between 4 and 20 characters (uppercase letters and numbers)',
+      throw new InvalidSKUError(
+        'debe tener entre 4 y 20 caracteres (letras mayúsculas y números)',
       );
     }
 
-    if (!/^[A-Z0-9\-]*$/.test(trimmed)) {
-      throw new Error(
-        'SKU can only contain uppercase letters, numbers, and hyphens',
+    if (!/^[A-Z0-9-]*$/.test(trimmed)) {
+      throw new InvalidSKUError(
+        'solo puede contener letras mayúsculas, números y guiones',
       );
     }
 

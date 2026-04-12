@@ -1,10 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import type { IUserRepository } from '../../domain/ports/user.repository.port';
-import { USER_REPOSITORY, WAREHOUSE_VALIDATOR } from '../../domain/ports/user.repository.port';
+import {
+  USER_REPOSITORY,
+  WAREHOUSE_VALIDATOR,
+} from '../../domain/ports/user.repository.port';
 import type { IWarehouseValidator } from '../../domain/ports/user.repository.port';
 import { User } from '../../domain/entities/user.entity';
-import { UserAlreadyExistsError, WarehouseNotFoundError } from '../../domain/errors/user.errors';
+import {
+  UserAlreadyExistsError,
+  WarehouseNotFoundError,
+} from '../../domain/errors/user.errors';
 import type { IPasswordHasher } from '../../../auth/application/ports/password-hasher.port';
 import { PASSWORD_HASHER } from '../../../auth/application/ports/password-hasher.port';
 import { CreateUserCommandDto, UserResultDto } from '../dtos';
@@ -29,7 +35,9 @@ export class CreateUserUseCase {
 
     // 2. Si es OPERATOR, validar que la bodega existe
     if (command.role === 'OPERATOR' && command.warehouseId) {
-      const warehouseExists = await this.warehouseValidator.existsAndIsActive(command.warehouseId);
+      const warehouseExists = await this.warehouseValidator.existsAndIsActive(
+        command.warehouseId,
+      );
       if (!warehouseExists) {
         throw new WarehouseNotFoundError(command.warehouseId);
       }
@@ -44,7 +52,8 @@ export class CreateUserUseCase {
       email: command.email,
       passwordHash,
       role: command.role,
-      warehouseId: command.role === 'OPERATOR' ? command.warehouseId || null : null,
+      warehouseId:
+        command.role === 'OPERATOR' ? command.warehouseId || null : null,
       createdAt: new Date(),
     });
 
@@ -67,4 +76,3 @@ export class CreateUserUseCase {
     };
   }
 }
-

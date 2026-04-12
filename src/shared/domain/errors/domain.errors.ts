@@ -1,9 +1,9 @@
 export type DomainErrorCode =
-    | 'UNAUTHORIZED'
-    | 'FORBIDDEN'
-    | 'NOT_FOUND'
-    | 'CONFLICT'
-    | 'UNPROCESSABLE';
+  | 'UNAUTHORIZED'
+  | 'FORBIDDEN'
+  | 'NOT_FOUND'
+  | 'CONFLICT'
+  | 'UNPROCESSABLE';
 
 /**
  * Base para todos los errores de dominio.
@@ -35,7 +35,9 @@ export class ForbiddenError extends DomainError {
 /** 404 */
 export class NotFoundError extends DomainError {
   constructor(entity: string, id?: string) {
-    const msg = id ? `${entity} con id '${id}' no encontrado` : `${entity} no encontrado`;
+    const msg = id
+      ? `${entity} con id '${id}' no encontrado`
+      : `${entity} no encontrado`;
     super('NOT_FOUND', msg);
   }
 }

@@ -1,5 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GetProductByIdUseCase, PRODUCT_REPOSITORY } from '../get-product-by-id.use-case';
+import {
+  GetProductByIdUseCase,
+  PRODUCT_REPOSITORY,
+} from '../get-product-by-id.use-case';
 import { ProductResultDto } from '@products/application/dtos';
 import { Product, SKU, ProductNotFoundError } from '@products/domain';
 import { IProductRepository } from '@products/domain';

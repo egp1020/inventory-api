@@ -27,7 +27,10 @@ export interface IUserRepository {
    * Obtiene todos los usuarios (activos).
    * Soporta paginación.
    */
-  findAll(page: number, limit: number): Promise<{ data: User[]; total: number }>;
+  findAll(
+    page: number,
+    limit: number,
+  ): Promise<{ data: User[]; total: number }>;
 
   /**
    * Actualiza un usuario.

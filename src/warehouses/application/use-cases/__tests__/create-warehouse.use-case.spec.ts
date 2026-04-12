@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateWarehouseUseCase, WAREHOUSE_REPOSITORY } from '../create-warehouse.use-case';
+import {
+  CreateWarehouseUseCase,
+  WAREHOUSE_REPOSITORY,
+} from '../create-warehouse.use-case';
 import {
   CreateWarehouseCommandDto,
   WarehouseResultDto,
 } from '@warehouses/application/dtos';
-import { Warehouse, Capacity } from '@warehouses/domain';
+
 import { IWarehouseRepository } from '@warehouses/domain';
 
 describe('CreateWarehouseUseCase', () => {

@@ -1,5 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ListProductsUseCase, PRODUCT_REPOSITORY } from '../list-products.use-case';
+import {
+  ListProductsUseCase,
+  PRODUCT_REPOSITORY,
+} from '../list-products.use-case';
 import { PaginatedProductResultDto } from '@products/application/dtos';
 import { Product, SKU } from '@products/domain';
 import { IProductRepository } from '@products/domain';

@@ -7,7 +7,8 @@ import { ApiProperty } from '@nestjs/swagger';
  */
 export class CreateProductRequestDto {
   @ApiProperty({
-    description: 'Product SKU (uppercase letters, numbers, hyphens: 4-20 chars)',
+    description:
+      'Product SKU (uppercase letters, numbers, hyphens: 4-20 chars)',
     example: 'PROD001',
   })
   @IsString()

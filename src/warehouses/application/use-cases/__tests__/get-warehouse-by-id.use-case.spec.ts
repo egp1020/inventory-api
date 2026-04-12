@@ -1,7 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GetWarehouseByIdUseCase, WAREHOUSE_REPOSITORY } from '../get-warehouse-by-id.use-case';
+import {
+  GetWarehouseByIdUseCase,
+  WAREHOUSE_REPOSITORY,
+} from '../get-warehouse-by-id.use-case';
 import { WarehouseResultDto } from '@warehouses/application/dtos';
-import { Warehouse, Capacity, WarehouseNotFoundError } from '@warehouses/domain';
+import {
+  Warehouse,
+  Capacity,
+  WarehouseNotFoundError,
+} from '@warehouses/domain';
 import { IWarehouseRepository } from '@warehouses/domain';
 
 describe('GetWarehouseByIdUseCase', () => {

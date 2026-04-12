@@ -10,7 +10,10 @@ import { ListUsersUseCase } from './application/use-cases/list-users.use-case';
 import { GetUserByIdUseCase } from './application/use-cases/get-user-by-id.use-case';
 
 // Domain Ports
-import { USER_REPOSITORY, WAREHOUSE_VALIDATOR } from './domain/ports/user.repository.port';
+import {
+  USER_REPOSITORY,
+  WAREHOUSE_VALIDATOR,
+} from './domain/ports/user.repository.port';
 
 // Infrastructure
 import { UserRepositoryAdapter } from './infrastructure/adapters/user.repository.adapter';

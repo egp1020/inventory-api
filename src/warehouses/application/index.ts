@@ -1,4 +1,9 @@
-export { CreateWarehouseCommandDto, UpdateWarehouseCommandDto, WarehouseResultDto, PaginatedWarehouseResultDto } from './dtos';
+export {
+  CreateWarehouseCommandDto,
+  UpdateWarehouseCommandDto,
+  WarehouseResultDto,
+  PaginatedWarehouseResultDto,
+} from './dtos';
 export {
   CreateWarehouseUseCase,
   GetWarehouseByIdUseCase,

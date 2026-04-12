@@ -16,14 +16,20 @@ export class WarehouseAlreadyDeletedError extends DomainError {
 
 export class InvalidWarehouseNameError extends DomainError {
   constructor() {
-    super('UNPROCESSABLE', 'El nombre de la bodega debe estar entre 1 y 100 caracteres');
+    super(
+      'UNPROCESSABLE',
+      'El nombre de la bodega debe estar entre 1 y 100 caracteres',
+    );
     this.name = 'InvalidWarehouseNameError';
   }
 }
 
 export class InvalidWarehouseLocationError extends DomainError {
   constructor() {
-    super('UNPROCESSABLE', 'La ubicación de la bodega debe estar entre 1 y 200 caracteres');
+    super(
+      'UNPROCESSABLE',
+      'La ubicación de la bodega debe estar entre 1 y 200 caracteres',
+    );
     this.name = 'InvalidWarehouseLocationError';
   }
 }

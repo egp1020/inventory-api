@@ -10,7 +10,10 @@ export interface IProductRepository {
   findById(id: string): Promise<Product | null>;
   findBySKU(sku: string): Promise<Product | null>;
   findAll(): Promise<Product[]>;
-  findAllPaginated(page: number, limit: number): Promise<{
+  findAllPaginated(
+    page: number,
+    limit: number,
+  ): Promise<{
     data: Product[];
     total: number;
     page: number;
