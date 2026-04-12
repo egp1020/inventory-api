@@ -9,7 +9,7 @@ describe('GetMovementHistoryReportUseCase', () => {
   let useCase: GetMovementHistoryReportUseCase;
   let mockRepository: Partial<IReportRepository>;
 
-  beforeEach(async () => {
+  beforeEach((): void => {
     // Arrange
     const mockMovements = [
       new MovementHistoryItemDto(
@@ -64,7 +64,7 @@ describe('GetMovementHistoryReportUseCase', () => {
 
   it('should filter by product id', async () => {
     // Act
-    const result = await useCase.execute('prod-123');
+    await useCase.execute('prod-123');
 
     // Assert
     expect(mockRepository.getMovementHistoryReport).toHaveBeenCalledWith(
@@ -80,7 +80,7 @@ describe('GetMovementHistoryReportUseCase', () => {
 
   it('should filter by warehouse id', async () => {
     // Act
-    const result = await useCase.execute(undefined, 'warehouse-456');
+    await useCase.execute(undefined, 'warehouse-456');
 
     // Assert
     expect(mockRepository.getMovementHistoryReport).toHaveBeenCalledWith(
@@ -96,7 +96,7 @@ describe('GetMovementHistoryReportUseCase', () => {
 
   it('should filter by movement type', async () => {
     // Act
-    const result = await useCase.execute(undefined, undefined, 'ENTRADA');
+    await useCase.execute(undefined, undefined, 'ENTRADA');
 
     // Assert
     expect(mockRepository.getMovementHistoryReport).toHaveBeenCalledWith(
@@ -116,7 +116,7 @@ describe('GetMovementHistoryReportUseCase', () => {
     const endDate = new Date('2026-04-30');
 
     // Act
-    const result = await useCase.execute(
+    await useCase.execute(
       undefined,
       undefined,
       undefined,
@@ -140,7 +140,7 @@ describe('GetMovementHistoryReportUseCase', () => {
 
   it('should handle pagination', async () => {
     // Act
-    const result = await useCase.execute(
+    await useCase.execute(
       undefined,
       undefined,
       undefined,
@@ -168,7 +168,7 @@ describe('GetMovementHistoryReportUseCase', () => {
     const endDate = new Date('2026-04-30');
 
     // Act
-    const result = await useCase.execute(
+    await useCase.execute(
       'prod-123',
       'warehouse-456',
       'SALIDA',
