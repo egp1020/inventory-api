@@ -21,6 +21,7 @@ import {
   RegisterMovementUseCase,
   ListMovementsUseCase,
   RegisterMovementCommandDto,
+  MovementResultDto,
 } from '@movements/application';
 import {
   RegisterMovementRequestDto,

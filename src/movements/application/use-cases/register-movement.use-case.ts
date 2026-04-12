@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { IMovementRepository } from '@movements/domain/ports';
-import { Movement } from '@movements/domain';
+import { Movement, MovementType } from '@movements/domain';
 import { Quantity } from '@movements/domain/value-objects';
 import {
   RegisterMovementCommandDto,
@@ -65,7 +65,7 @@ export class RegisterMovementUseCase {
         command.productId,
         command.warehouseId,
         command.userId,
-        command.type,
+        command.type as MovementType,
         quantity,
         command.notes,
       );
