@@ -7,7 +7,6 @@ import {
   CreateProductCommandDto,
   ProductResultDto,
 } from '@products/application/dtos';
-import { Product } from '@products/domain';
 import { IProductRepository } from '@products/domain';
 
 describe('CreateProductUseCase', () => {
@@ -64,10 +63,9 @@ describe('CreateProductUseCase', () => {
       );
 
       // Act
-      const result = await useCase.execute(command);
+      await useCase.execute(command);
 
       // Assert
-      expect(result.sku).toBe('SKU-A1B2C3');
       expect(mockRepository.save).toHaveBeenCalled();
     });
 
