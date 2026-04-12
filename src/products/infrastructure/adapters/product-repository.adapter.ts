@@ -152,4 +152,11 @@ export class ProductRepositoryAdapter implements IProductRepository {
       await this.save(product);
     }
   }
+
+  async hasMovements(productId: string): Promise<boolean> {
+    const count = await this.prisma.stockMovement.count({
+      where: { productId },
+    });
+    return count > 0;
+  }
 }
