@@ -5,9 +5,9 @@ import type { IProductRepository } from '@products/domain';
 import {
   CreateProductCommandDto,
   ProductResultDto,
-  PRODUCT_REPOSITORY,
-} from '@products/application';
+} from '@products/application/dtos';
 
+const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 /**
  * CreateProductUseCase
