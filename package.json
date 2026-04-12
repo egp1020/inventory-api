@@ -84,7 +84,10 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^@shared/(.*)$": "<rootDir>/shared/$1",
-      "^@database/(.*)$": "<rootDir>/database/$1"
+      "^@database/(.*)$": "<rootDir>/database/$1",
+      "^@auth/(.*)$": "<rootDir>/auth/$1",
+      "^@users/(.*)$": "<rootDir>/users/$1",
+      "^@warehouses/(.*)$": "<rootDir>/warehouses/$1"
     }
   },
   "pnpm": {
