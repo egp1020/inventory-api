@@ -27,7 +27,9 @@
       "@auth/*": ["src/auth/*"],
       "@users/*": ["src/users/*"],
       "@warehouses/*": ["src/warehouses/*"],
-      "@products/*": ["src/products/*"]
+      "@products/*": ["src/products/*"],
+      "@movements/*": ["src/movements/*"],
+      "@reports/*": ["src/reports/*"]
     }
   }
 }
