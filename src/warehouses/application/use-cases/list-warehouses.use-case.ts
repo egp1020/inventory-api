@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IWarehouseRepository } from '@warehouses/domain';
-import { PaginatedWarehouseResultDto, WarehouseResultDto } from '@warehouses/application/dtos';
-
-const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
+import { PaginatedWarehouseResultDto, WarehouseResultDto, WAREHOUSE_REPOSITORY } from '@warehouses/application';
 
 /**
  * ListWarehousesUseCase

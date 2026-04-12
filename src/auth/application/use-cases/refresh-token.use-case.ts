@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IUserRepository } from '../../domain/ports/user.repository.port';
-import { USER_REPOSITORY } from '../../domain/ports/user.repository.port';
+import { USER_REPOSITORY } from '../symbols';
 import { InvalidRefreshTokenError, UserInactiveError } from '../../domain/errors/auth.errors';
 import type { ITokenGenerator } from '../ports/token-generator.port';
 import { TOKEN_GENERATOR } from '../ports/token-generator.port';

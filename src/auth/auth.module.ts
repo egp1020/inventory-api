@@ -14,7 +14,7 @@ import {
   TOKEN_GENERATOR,
   ITokenGenerator,
 } from './application/ports/token-generator.port';
-import { USER_REPOSITORY } from './domain/ports/user.repository.port';
+import { USER_REPOSITORY } from './application/symbols';
 
 // Infrastructure
 import { BcryptPasswordHasher } from './infrastructure/adapters/password-hasher.adapter';

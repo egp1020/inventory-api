@@ -7,3 +7,5 @@ export {
   DeleteProductUseCase,
 } from './use-cases';
 export type { IProductRepository } from './ports';
+export { PRODUCT_REPOSITORY } from './symbols';
+

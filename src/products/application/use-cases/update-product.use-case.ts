@@ -4,9 +4,9 @@ import type { IProductRepository } from '@products/domain';
 import {
   UpdateProductCommandDto,
   ProductResultDto,
-} from '@products/application/dtos';
+  PRODUCT_REPOSITORY,
+} from '@products/application';
 
-const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 /**
  * UpdateProductUseCase

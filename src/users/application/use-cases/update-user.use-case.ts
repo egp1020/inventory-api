@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type { IUserRepository } from '../../domain/ports/user.repository.port';
-import { USER_REPOSITORY, type IWarehouseValidator, WAREHOUSE_VALIDATOR } from '../../domain/ports/user.repository.port';
+import type { IUserRepository, IWarehouseValidator } from '../../domain/ports/user.repository.port';
+import { USER_REPOSITORY } from '../symbols';
+import { WAREHOUSE_VALIDATOR } from '../symbols';
 import { UserNotFoundError, WarehouseNotFoundError } from '../../domain/errors/user.errors';
 import { User } from '../../domain/entities/user.entity';
 import { UpdateUserCommandDto, UserResultDto } from '../dtos';

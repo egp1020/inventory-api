@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IUserRepository } from '../../domain/ports/user.repository.port';
-import { USER_REPOSITORY } from '../../domain/ports/user.repository.port';
+import { USER_REPOSITORY } from '../symbols';
 import { UserNotFoundError } from '../../domain/errors/user.errors';
 import { User } from '../../domain/entities/user.entity';
 import { UserResultDto } from '../dtos';
