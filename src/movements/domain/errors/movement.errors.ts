@@ -2,18 +2,18 @@ import { DomainError } from '@shared/domain/errors/domain.errors';
 
 /**
  * MovementNotFoundError
- * Lanzado cuando se intenta obtener un movimiento que no existe
+ * Thrown when attempting to get a movement that does not exist
  */
 export class MovementNotFoundError extends DomainError {
   constructor(id: string) {
-    super('NOT_FOUND', `Movimiento con ID "${id}" no encontrado`);
+    super('NOT_FOUND', `Movement with ID "${id}" not found`);
     this.name = 'MovementNotFoundError';
   }
 }
 
 /**
  * InsufficientStockError
- * Lanzado cuando hay intento de sacar más producto del que hay disponible
+ * Thrown when attempting to remove more product than is available
  */
 export class InsufficientStockError extends DomainError {
   constructor(
@@ -24,7 +24,7 @@ export class InsufficientStockError extends DomainError {
   ) {
     super(
       'UNPROCESSABLE',
-      `Stock insuficiente para producto "${productId}" en bodega "${warehouseId}". Disponible: ${available}, Solicitado: ${requested}`,
+      `Insufficient stock for product "${productId}" in warehouse "${warehouseId}". Available: ${available}, Requested: ${requested}`,
     );
     this.name = 'InsufficientStockError';
   }
@@ -32,13 +32,13 @@ export class InsufficientStockError extends DomainError {
 
 /**
  * InvalidMovementTypeError
- * Lanzado cuando el tipo de movimiento es inválido
+ * Thrown when the movement type is invalid
  */
 export class InvalidMovementTypeError extends DomainError {
   constructor(type: string) {
     super(
       'UNPROCESSABLE',
-      `Tipo de movimiento inválido "${type}". Permitidos: ENTRADA, SALIDA`,
+      `Invalid movement type "${type}". Allowed: ENTRADA, SALIDA`,
     );
     this.name = 'InvalidMovementTypeError';
   }
@@ -46,46 +46,46 @@ export class InvalidMovementTypeError extends DomainError {
 
 /**
  * WarehouseNotFoundForMovementError
- * Lanzado cuando la bodega no existe
+ * Thrown when the warehouse does not exist
  */
 export class WarehouseNotFoundForMovementError extends DomainError {
   constructor(warehouseId: string) {
-    super('NOT_FOUND', `Bodega con ID "${warehouseId}" no encontrada`);
+    super('NOT_FOUND', `Warehouse with ID "${warehouseId}" not found`);
     this.name = 'WarehouseNotFoundForMovementError';
   }
 }
 
 /**
  * ProductNotFoundForMovementError
- * Lanzado cuando el producto no existe
+ * Thrown when the product does not exist
  */
 export class ProductNotFoundForMovementError extends DomainError {
   constructor(productId: string) {
-    super('NOT_FOUND', `Producto con ID "${productId}" no encontrado`);
+    super('NOT_FOUND', `Product with ID "${productId}" not found`);
     this.name = 'ProductNotFoundForMovementError';
   }
 }
 
 /**
  * UserNotFoundForMovementError
- * Lanzado cuando el usuario no existe
+ * Thrown when the user does not exist
  */
 export class UserNotFoundForMovementError extends DomainError {
   constructor(userId: string) {
-    super('NOT_FOUND', `Usuario con ID "${userId}" no encontrado`);
+    super('NOT_FOUND', `User with ID "${userId}" not found`);
     this.name = 'UserNotFoundForMovementError';
   }
 }
 
 /**
  * UnauthorizedMovementError
- * Lanzado cuando el usuario intenta registrar movimiento en bodega no asignada
+ * Thrown when the user attempts to register a movement in an unassigned warehouse
  */
 export class UnauthorizedMovementError extends DomainError {
   constructor(userId: string, warehouseId: string) {
     super(
       'FORBIDDEN',
-      `Usuario "${userId}" no autorizado para registrar movimientos en bodega "${warehouseId}"`,
+      `User "${userId}" unauthorized to register movements in warehouse "${warehouseId}"`,
     );
     this.name = 'UnauthorizedMovementError';
   }

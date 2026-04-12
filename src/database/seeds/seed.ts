@@ -4,17 +4,17 @@ import * as bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Iniciando seed de base de datos...');
+  console.log('🌱 Starting database seed de base de datos...');
 
   // Limpiar datos existentes
-  console.log('🗑️ Limpiando datos previos...');
+  console.log('🗑️ Cleaning previous data previos...');
   await prisma.stockMovement.deleteMany({});
   await prisma.product.deleteMany({});
   await prisma.user.deleteMany({});
   await prisma.warehouse.deleteMany({});
 
-  // 1. Crear ADMIN usuario
-  console.log('👤 Creando usuario ADMIN...');
+  // 1. Create ADMIN user
+  console.log('👤 Creating user ADMIN...');
   const adminHashedPassword = await bcrypt.hash('admin123', 10);
   const admin = await prisma.user.create({
     data: {
@@ -23,10 +23,10 @@ async function main() {
       role: 'ADMIN',
     },
   });
-  console.log(`✓ ADMIN creado: ${admin.email}`);
+  console.log(`✓ ADMIN created: ${admin.email}`);
 
-  // 2. Crear 2 bodegas
-  console.log('📦 Creando 2 bodegas...');
+  // 2. Create 2 warehouses
+  console.log('📦 Creating 2 warehouses...');
   const warehouse1 = await prisma.warehouse.create({
     data: {
       name: 'Almacén Central',
@@ -35,7 +35,7 @@ async function main() {
       isActive: true,
     },
   });
-  console.log(`✓ Bodega 1: ${warehouse1.name}`);
+  console.log(`✓ Warehouse 1: ${warehouse1.name}`);
 
   const warehouse2 = await prisma.warehouse.create({
     data: {
@@ -45,10 +45,10 @@ async function main() {
       isActive: true,
     },
   });
-  console.log(`✓ Bodega 2: ${warehouse2.name}`);
+  console.log(`✓ Warehouse 2: ${warehouse2.name}`);
 
-  // 3. Crear OPERATOR usuario asignado a warehouse1
-  console.log('👤 Creando usuario OPERATOR...');
+  // 3. Create OPERATOR user assigned a warehouse1
+  console.log('👤 Creating user OPERATOR...');
   const operatorHashedPassword = await bcrypt.hash('operator123', 10);
   const operator = await prisma.user.create({
     data: {
@@ -59,11 +59,11 @@ async function main() {
     },
   });
   console.log(
-    `✓ OPERATOR creado: ${operator.email} (asignado a ${warehouse1.name})`,
+    `✓ OPERATOR created: ${operator.email} (assigned a ${warehouse1.name})`,
   );
 
-  // 4. Crear 5 productos
-  console.log('🏷️ Creando 5 productos...');
+  // 4. Create 5 products
+  console.log('🏷️ Creating 5 products...');
   const products = await Promise.all([
     prisma.product.create({
       data: {
@@ -114,15 +114,15 @@ async function main() {
 
   products.forEach((p) => console.log(`✓ ${p.sku} - ${p.name}`));
 
-  // 5. Crear movimientos iniciales (ENTRADA)
-  console.log('📊 Creando movimientos iniciales...');
+  // 5. Create initial movements (ENTRADA)
+  console.log('📊 Creating movements iniciales...');
 
   const now = new Date();
   const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
   const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
 
   const movements = await Promise.all([
-    // Almacén 1: Stock inicial alto
+    // Warehouse 1: Initial stock alto
     prisma.stockMovement.create({
       data: {
         productId: products[0].id, // LAPTOP001
@@ -130,11 +130,11 @@ async function main() {
         userId: admin.id,
         type: 'ENTRADA',
         quantity: 500,
-        notes: 'Stock inicial',
+        notes: 'Initial stock',
         createdAt: threeDaysAgo,
       },
     }),
-    // Almacén 1: Monitor
+    // Warehouse 1: Monitor
     prisma.stockMovement.create({
       data: {
         productId: products[1].id, // MONITOR-27
@@ -146,7 +146,7 @@ async function main() {
         createdAt: threeDaysAgo,
       },
     }),
-    // Almacén 1: Teclados
+    // Warehouse 1: Teclados
     prisma.stockMovement.create({
       data: {
         productId: products[2].id, // TECLADO001
@@ -158,7 +158,7 @@ async function main() {
         createdAt: threeDaysAgo,
       },
     }),
-    // Almacén 1: Mice
+    // Warehouse 1: Mice
     prisma.stockMovement.create({
       data: {
         productId: products[3].id, // MOUSE-WIRELESS
@@ -170,7 +170,7 @@ async function main() {
         createdAt: threeDaysAgo,
       },
     }),
-    // Almacén 1: Cable
+    // Warehouse 1: Cable
     prisma.stockMovement.create({
       data: {
         productId: products[4].id, // CABLE-HDMI-2
@@ -183,7 +183,7 @@ async function main() {
       },
     }),
 
-    // Almacén 2: Stock inicial
+    // Warehouse 2: Initial stock
     prisma.stockMovement.create({
       data: {
         productId: products[0].id, // LAPTOP001
@@ -196,7 +196,7 @@ async function main() {
       },
     }),
 
-    // Almacén 1: Salida (Laptop)
+    // Warehouse 1: Salida (Laptop)
     prisma.stockMovement.create({
       data: {
         productId: products[0].id, // LAPTOP001
@@ -209,7 +209,7 @@ async function main() {
       },
     }),
 
-    // Almacén 1: Salida (Monitor)
+    // Warehouse 1: Salida (Monitor)
     prisma.stockMovement.create({
       data: {
         productId: products[1].id, // MONITOR-27
@@ -222,7 +222,7 @@ async function main() {
       },
     }),
 
-    // Almacén 1: Salida (Mouse) - para generar alerta bajo stock
+    // Warehouse 1: Salida (Mouse) - para generar alerta bajo stock
     prisma.stockMovement.create({
       data: {
         productId: products[3].id, // MOUSE-WIRELESS
@@ -236,9 +236,9 @@ async function main() {
     }),
   ]);
 
-  console.log(`✓ ${movements.length} movimientos creados`);
+  console.log(`✓ ${movements.length} movimientos createds`);
 
-  console.log('\n✅ Seed completado exitosamente');
+  console.log('\n✅ Seed completed exitosamente');
   console.log('\n📋 Datos de prueba:');
   console.log('┌─────────────────────────────────────┐');
   console.log('│ ADMIN');
@@ -257,7 +257,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('❌ Error en seed:', e);
+    console.error('Error in seed:', e);
     process.exit(1);
   })
   .finally(async () => {

@@ -30,7 +30,7 @@ export class WarehouseRepositoryAdapter implements IWarehouseRepository {
 
     if (existing) {
       this.logger.debug(
-        `Actualizando bodega: id=${warehouse.getId()}, nombre=${warehouse.getName()}`,
+        `Updating bodega: id=${warehouse.getId()}, nombre=${warehouse.getName()}`,
       );
       await this.prisma.warehouse.update({
         where: { id: warehouse.getId() },
@@ -41,7 +41,7 @@ export class WarehouseRepositoryAdapter implements IWarehouseRepository {
       );
     } else {
       this.logger.debug(
-        `Creando bodega: nombre=${warehouse.getName()}, ubicación=${warehouse.getLocation()}`,
+        `Creating bodega: nombre=${warehouse.getName()}, ubicación=${warehouse.getLocation()}`,
       );
       await this.prisma.warehouse.create({ data });
       this.logger.log(
@@ -137,7 +137,7 @@ export class WarehouseRepositoryAdapter implements IWarehouseRepository {
   async delete(id: string): Promise<void> {
     const warehouse = await this.findById(id);
     if (warehouse) {
-      this.logger.debug(`Eliminando bodega (soft delete): id=${id}`);
+      this.logger.debug(`Deleting bodega (soft delete): id=${id}`);
       warehouse.softDelete();
       await this.save(warehouse);
       this.logger.log(`Bodega eliminada (soft delete): id=${id}`);

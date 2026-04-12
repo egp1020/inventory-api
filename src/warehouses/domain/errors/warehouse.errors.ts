@@ -2,14 +2,14 @@ import { DomainError } from '@shared/domain/errors/domain.errors';
 
 export class WarehouseNotFoundError extends DomainError {
   constructor(warehouseId: string) {
-    super('NOT_FOUND', `Bodega con ID ${warehouseId} no encontrada`);
+    super('NOT_FOUND', `Warehouse with ID ${warehouseId} not found`);
     this.name = 'WarehouseNotFoundError';
   }
 }
 
 export class WarehouseAlreadyDeletedError extends DomainError {
   constructor(warehouseId: string) {
-    super('CONFLICT', `Bodega con ID ${warehouseId} ha sido eliminada`);
+    super('CONFLICT', `Warehouse with ID ${warehouseId} has been deleted`);
     this.name = 'WarehouseAlreadyDeletedError';
   }
 }
@@ -18,7 +18,7 @@ export class InvalidWarehouseNameError extends DomainError {
   constructor() {
     super(
       'UNPROCESSABLE',
-      'El nombre de la bodega debe estar entre 1 y 100 caracteres',
+      'Warehouse name must be between 1 and 100 characters',
     );
     this.name = 'InvalidWarehouseNameError';
   }
@@ -28,7 +28,7 @@ export class InvalidWarehouseLocationError extends DomainError {
   constructor() {
     super(
       'UNPROCESSABLE',
-      'La ubicación de la bodega debe estar entre 1 y 200 caracteres',
+      'Warehouse location must be between 1 and 200 characters',
     );
     this.name = 'InvalidWarehouseLocationError';
   }

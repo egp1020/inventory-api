@@ -1,38 +1,38 @@
 import { DomainError } from '@shared/domain/errors/domain.errors';
 
 /**
- * Error específico del dominio de autenticación.
- * Se lanza cuando las credenciales no coinciden.
+ * Domain-specific error for authentication.
+ * Thrown when credentials do not match.
  */
 export class InvalidCredentialsError extends DomainError {
-  constructor(message: string = 'Email o contraseña inválidos') {
+  constructor(message: string = 'Email or password invalid') {
     super('UNAUTHORIZED', message);
   }
 }
 
 /**
- * Error cuando el refresh token es inválido o expiró.
+ * Error when the refresh token is invalid or expired.
  */
 export class InvalidRefreshTokenError extends DomainError {
-  constructor(message: string = 'Refresh token inválido o expirado') {
+  constructor(message: string = 'Refresh token invalid or expired') {
     super('UNAUTHORIZED', message);
   }
 }
 
 /**
- * Error cuando se intenta crear un usuario con un email que ya existe.
+ * Error when attempting to create a user with an email that already exists.
  */
 export class EmailAlreadyExistsError extends DomainError {
   constructor(email: string) {
-    super('CONFLICT', `El email '${email}' ya está registrado`);
+    super('CONFLICT', `Email '${email}' is already registered`);
   }
 }
 
 /**
- * Error cuando un usuario no está activo (soft deleted).
+ * Error when a user is not active (soft deleted).
  */
 export class UserInactiveError extends DomainError {
   constructor() {
-    super('FORBIDDEN', 'El usuario ha sido desactivado');
+    super('FORBIDDEN', 'User has been deactivated');
   }
 }

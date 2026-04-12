@@ -25,13 +25,13 @@ export class UpdateUserUseCase {
     id: string,
     command: UpdateUserCommandDto,
   ): Promise<UserResultDto> {
-    // 1. Verificar que el usuario existe
+    // 1. Check that the user exists
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new UserNotFoundError(id);
     }
 
-    // 2. Si se cambia email, verificar que no exista otro con ese email
+    // 2. If email changes, verify no other user has that email
     if (command.email && command.email !== user.email.getValue()) {
       const exists = await this.userRepository.existsByEmailExcludingId(
         command.email,
@@ -42,7 +42,7 @@ export class UpdateUserUseCase {
       }
     }
 
-    // 3. Si es OPERATOR y se asigna bodega, validar
+    // 3. If OPERATOR role and warehouse is assigned, validate
     const newRole = command.role ?? user.role;
     const newWarehouseId =
       command.warehouseId !== undefined
@@ -57,7 +57,7 @@ export class UpdateUserUseCase {
       }
     }
 
-    // 4. Crear versión actualizada
+    // 4. Create updated version
     const updatedUser = user.with({
       email: command.email,
       role: command.role,
@@ -66,7 +66,7 @@ export class UpdateUserUseCase {
 
     updatedUser.validateWarehouseAssignment(updatedUser.warehouseId);
 
-    // 5. Persistir
+    // 5. Persist
     const result = await this.userRepository.update(id, updatedUser);
 
     return this.mapToUserResultDto(result);

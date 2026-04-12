@@ -28,9 +28,9 @@ import {
 
 /**
  * ReportsController
- * Maneja peticiones HTTP para reportes de inventario
- * Todos los endpoints requieren autenticación
- * GetAlertsReport requiere ADMIN
+ * Handles HTTP requests for inventory reports
+ * All endpoints require authentication
+ * GetAlertsReport requires ADMIN
  */
 @ApiTags('Reports')
 @ApiBearerAuth()

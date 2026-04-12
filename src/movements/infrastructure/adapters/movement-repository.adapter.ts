@@ -35,7 +35,7 @@ export class MovementRepositoryAdapter implements IMovementRepository {
     );
 
     if (validateExistence) {
-      // Validar que el producto existe
+      // Validate that el producto existe
       const product = await this.prisma.product.findUnique({
         where: { id: movement.getProductId() },
       });
@@ -46,7 +46,7 @@ export class MovementRepositoryAdapter implements IMovementRepository {
         throw new ProductNotFoundForMovementError(movement.getProductId());
       }
 
-      // Validar que la bodega existe
+      // Validate that la bodega existe
       const warehouse = await this.prisma.warehouse.findUnique({
         where: { id: movement.getWarehouseId() },
       });
@@ -57,18 +57,16 @@ export class MovementRepositoryAdapter implements IMovementRepository {
         throw new WarehouseNotFoundForMovementError(movement.getWarehouseId());
       }
 
-      // Validar que el usuario existe
+      // Validate that el usuario existe
       const user = await this.prisma.user.findUnique({
         where: { id: movement.getUserId() },
       });
       if (!user) {
-        this.logger.warn(
-          `Usuario no encontrado: id=${movement.getUserId()}`,
-        );
+        this.logger.warn(`Usuario no encontrado: id=${movement.getUserId()}`);
         throw new UserNotFoundForMovementError(movement.getUserId());
       }
 
-      // Si es OPERATOR, validar que está asignado a esta bodega
+      // If is OPERATOR, validar que está asignado a esta bodega
       if (
         user.role === 'OPERATOR' &&
         user.warehouseId !== movement.getWarehouseId()

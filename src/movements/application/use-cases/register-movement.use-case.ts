@@ -24,7 +24,7 @@ const MOVEMENT_REPOSITORY = Symbol('MOVEMENT_REPOSITORY');
  *    - Validar usuario tiene permisos en esa bodega (si es OPERATOR)
  *    - Validar stock disponible (si es SALIDA)
  *    - Persistir en transacción
- * 4. Retornar DTO con datos del movimiento creado
+ * 4. Retornar DTO con datos del movimiento created
  *
  * Nota: Toda operación de persistencia se ejecuta en transacción Prisma $transaction
  * para garantizar atomicidad.
@@ -45,21 +45,21 @@ export class RegisterMovementUseCase {
   ) {}
 
   /**
-   * Ejecuta el caso de uso de registro de movimiento.
+   * Executes the movement registration use case.
    *
-   * @param command - Comando con datos de producto, bodega, usuario, tipo y cantidad
-   * @returns Promise<MovementResultDto> - Movimiento creado con todos sus detalles
-   * @throws Errores de dominio si validaciones fallan (ver clase)
+   * @param command - Command with data for product, warehouse, user, type and quantity
+   * @returns Promise<MovementResultDto> - Created movement with all its details
+   * @throws Domain errors if validations fail (see class)
    */
   async execute(
     command: RegisterMovementCommandDto,
   ): Promise<MovementResultDto> {
     this.logger.debug(
-      `Registrando movimiento: producto=${command.productId}, bodega=${command.warehouseId}, tipo=${command.type}, cantidad=${command.quantity}`,
+      `Registering movement: product=${command.productId}, warehouse=${command.warehouseId}, type=${command.type}, quantity=${command.quantity}`,
     );
 
     try {
-      // Crear el movimiento
+      // Create the movement
       const quantity = Quantity.create(command.quantity);
       const movement = Movement.create(
         command.productId,
@@ -71,11 +71,11 @@ export class RegisterMovementUseCase {
       );
 
       movement.validate();
-      // El repositorio hará las validaciones (existencia de producto, bodega, usuario, stock, etc.)
+      // The repository will perform validations (product existence, warehouse, user, stock, etc.)
       await this.movementRepository.save(movement);
 
       this.logger.log(
-        `Movimiento registrado exitosamente: id=${movement.getId()}, tipo=${movement.getTypeValue()}`,
+        `Movement registered successfully: id=${movement.getId()}, type=${movement.getTypeValue()}`,
       );
 
       return new MovementResultDto(
@@ -90,7 +90,7 @@ export class RegisterMovementUseCase {
       );
     } catch (error) {
       this.logger.error(
-        `Error al registrar movimiento: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+        `Error registering movement: ${error instanceof Error ? error.message : 'Unknown error'}`,
         error instanceof Error ? error.stack : '',
       );
       throw error;

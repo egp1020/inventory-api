@@ -5,7 +5,7 @@ import { Role } from '@prisma/client';
 export class UpdateUserDto {
   @ApiProperty({
     example: 'newoperator@warehouse.com',
-    description: 'Email del usuario',
+    description: 'User email',
     required: false,
   })
   @IsOptional()
@@ -15,7 +15,7 @@ export class UpdateUserDto {
   @ApiProperty({
     example: 'OPERATOR',
     enum: ['ADMIN', 'OPERATOR'],
-    description: 'Rol del usuario',
+    description: 'User role',
     required: false,
   })
   @IsOptional()

@@ -25,37 +25,33 @@ export class LoginUseCase {
   ) {}
 
   async execute(command: LoginCommandDto): Promise<AuthResultDto> {
-    this.logger.debug(`Intento de login: email=${command.email}`);
+    this.logger.debug(`Login attempt: email=${command.email}`);
 
     try {
-      // 1. Buscar usuario por email
+      // 1. Find user by email
       const user = await this.userRepository.findByEmail(command.email);
       if (!user) {
-        this.logger.warn(`Login fallido: usuario no encontrado (${command.email})`);
+        this.logger.warn(`Login failed: user not found (${command.email})`);
         throw new InvalidCredentialsError();
       }
 
-      // 2. Verificar que el usuario esté activo (no soft deleted)
+      // 2. Verify that user is active (not soft deleted)
       if (!user.isActive()) {
-        this.logger.warn(
-          `Login fallido: usuario inactivo (${command.email})`,
-        );
+        this.logger.warn(`Login failed: inactive user (${command.email})`);
         throw new UserInactiveError();
       }
 
-      // 3. Validar contraseña
+      // 3. Validate password
       const isPasswordValid = await this.passwordHasher.compare(
         command.password,
         user.passwordHash,
       );
       if (!isPasswordValid) {
-        this.logger.warn(
-          `Login fallido: contraseña inválida (${command.email})`,
-        );
+        this.logger.warn(`Login failed: invalid password (${command.email})`);
         throw new InvalidCredentialsError();
       }
 
-      // 4. Generar tokens
+      // 4. Generate tokens
       const accessToken = this.tokenGenerator.generateAccessToken({
         sub: user.id,
         email: user.email.getValue(),
@@ -67,7 +63,7 @@ export class LoginUseCase {
       });
 
       this.logger.log(
-        `Login exitoso: usuario=${user.email.getValue()}, rol=${user.role}`,
+        `Login successful: user=${user.email.getValue()}, role=${user.role}`,
       );
 
       return { accessToken, refreshToken };
@@ -80,7 +76,7 @@ export class LoginUseCase {
       }
 
       this.logger.error(
-        `Error en login: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+        `Error in login: ${error instanceof Error ? error.message : 'Unknown error'}`,
         error instanceof Error ? error.stack : '',
       );
       throw error;

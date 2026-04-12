@@ -27,7 +27,7 @@ export class DeleteProductUseCase {
       throw new ProductNotFoundError(id);
     }
 
-    // Verificar si el producto tiene movimientos
+    // Check if el producto tiene movimientos
     const hasMovements = await this.productRepository.hasMovements(id);
     if (hasMovements) {
       throw new ProductHasMovementsError(id);

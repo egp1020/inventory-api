@@ -1,36 +1,37 @@
 import { Movement } from '@movements/domain/entities';
 
 /**
- * IMovementRepository - Port (Interfaz) de Persistencia de Movimientos
+ * IMovementRepository - Port (Interface) for Movement Persistence
  *
- * Define el contrato que la infraestructura DEBE implementar para persistir
- * movimientos de stock. Pertenece a la capa Domain y NO tiene dependencias de frameworks.
+ * Defines the contract that infrastructure MUST implement to persist
+ * stock movements. Belongs to the Domain layer and has NO framework dependencies.
  *
- * Responsabilidades de la implementación:
- * 1. Persistir movimientos dentro de transacciones atómicas (prisma.$transaction)
- * 2. Validar existencia de producto, bodega, usuario
- * 3. Validar permisos (OPERATOR solo puede crear en su bodega asignada)
- * 4. Validar stock disponible antes de permitir SALIDA
- * 5. Calcular stock dinámicamente (no almacenado, derivado del historial)
+ * Implementation responsibilities:
+ * 1. Persist movements within atomic transactions (prisma.$transaction)
+ * 2. Validate product exists
+ * 3. Validate warehouse exists
+ * 4. Validate permissions (OPERATOR can only create in assigned warehouse)
+ * 5. Validate available stock before allowing SALIDA (output)
+ * 6. Calculate stock dynamically (not stored, derived from history)
  *
- * Implementado en: src/movements/infrastructure/adapters/movement-repository.adapter.ts
+ * Implemented in: src/movements/infrastructure/adapters/movement-repository.adapter.ts
  */
 export interface IMovementRepository {
   /**
-   * Guarda un nuevo movimiento en la base de datos.
+   * Saves a new movement in the database.
    *
-   * Nota crítica: Esta operación DEBE ejecutarse dentro de una transacción
-   * Prisma (prisma.$transaction) para garantizar atomicidad cuando hay
-   * validaciones y persistencia concurrentes.
+   * Critical note: This operation MUST execute within a Prisma transaction
+   * (prisma.$transaction) to guarantee atomicity when there are
+   * validations and concurrent persistence.
    *
-   * Validaciones que realiza:
-   * - Producto existe
-   * - Bodega existe
-   * - Usuario existe
-   * - Si es OPERATOR: que tenga acceso a esa bodega
-   * - Si es SALIDA: stock suficiente disponible
+   * Validations performed:
+   * - Product exists
+   * - Warehouse exists
+   * - User exists
+   * - If OPERATOR: has access to that warehouse
+   * - If SALIDA: sufficient available stock
    *
-   * @param movement - Entidad Movement ya validada en dominio
+   * @param movement - Movement entity already validated in domain
    * @throws {ProductNotFoundForMovementError}
    * @throws {WarehouseNotFoundForMovementError}
    * @throws {UserNotFoundForMovementError}
@@ -40,25 +41,25 @@ export interface IMovementRepository {
   save(movement: Movement): Promise<void>;
 
   /**
-   * Obtiene un movimiento por ID
+   * Gets a movement by ID
    */
   findById(id: string): Promise<Movement | null>;
 
   /**
-   * Calcula el stock actual de un producto en una bodega específica.
+   * Calculates the current stock of a product in a specific warehouse.
    *
-   * El stock NO se almacena como campo separado. Se calcula dinámicamente como:
-   * stock = SUM(ENTRADA) - SUM(SALIDA) para ese producto en esa bodega
+   * Stock is NOT stored as a separate field. It is calculated dynamically as:
+   * stock = SUM(ENTRADA) - SUM(SALIDA) for that product in that warehouse
    *
-   * Esta estrategia:
-   * ✅ Elimina redundancia de datos
-   * ✅ Garantiza consistencia (no hay desincronización)
-   * ✅ Permite auditoría completa (historial intacto)
-   * ❌ Requiere índices en queries de stock (ver prisma schema)
+   * This strategy:
+   * ✅ Eliminates data redundancy
+   * ✅ Guarantees consistency (no desynchronization)
+   * ✅ Allows complete audit (history intact)
+   * ❌ Requires indexes on stock queries (see prisma schema)
    *
-   * @param productId - UUID del producto
-   * @param warehouseId - UUID de la bodega
-   * @returns Promise<number> - Stock actual (puede ser negativo si hay inconsistencias)
+   * @param productId - Product UUID
+   * @param warehouseId - Warehouse UUID
+   * @returns Promise<number> - Current stock (may be negative if inconsistencies exist)
    */
   getStockByProductAndWarehouse(
     productId: string,
@@ -66,26 +67,26 @@ export interface IMovementRepository {
   ): Promise<number>;
 
   /**
-   * Lista movimientos con filtros y paginación.
+   * Lists movements with filters and pagination.
    *
-   * Filtros opcionales:
-   * - productId: movimientos de un producto específico
-   * - warehouseId: movimientos de una bodega específica
-   * - type: filtrar por ENTRADA o SALIDA
-   * - startDate/endDate: rango temporal (inclusive)
+   * Optional filters:
+   * - productId: movements of a specific product
+   * - warehouseId: movements of a specific warehouse
+   * - type: filter by ENTRADA or SALIDA
+   * - startDate/endDate: time range (inclusive)
    *
-   * Paginación:
-   * - page: 1-based (page 1 = registros 1-limit)
-   * - limit: cantidad de registros por página
+   * Pagination:
+   * - page: 1-based (page 1 = records 1-limit)
+   * - limit: quantity of records per page
    *
-   * @param productId - [OPTIONAL] UUID del producto
-   * @param warehouseId - [OPTIONAL] UUID de la bodega
+   * @param productId - [OPTIONAL] Product UUID
+   * @param warehouseId - [OPTIONAL] Warehouse UUID
    * @param type - [OPTIONAL] "ENTRADA" | "SALIDA"
-   * @param startDate - [OPTIONAL] Fecha inicial (UTC)
-   * @param endDate - [OPTIONAL] Fecha final (UTC)
-   * @param page - Número de página (default: 1)
-   * @param limit - Registros por página (default: 10)
-   * @returns Movimientos paginados con total y cálculo de totalPages
+   * @param startDate - [OPTIONAL] Start date (UTC)
+   * @param endDate - [OPTIONAL] End date (UTC)
+   * @param page - Page number (default: 1)
+   * @param limit - Records per page (default: 10)
+   * @returns Paginated movements with total and totalPages calculation
    */
   listMovements(
     productId?: string,

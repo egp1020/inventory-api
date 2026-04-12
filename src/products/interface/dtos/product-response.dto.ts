@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ProductResultDto } from '@products/application/dtos';
 
 /**
- * HTTP Response DTO
+ * DTO de Respuesta HTTP
  * Transforma ProductResultDto a respuesta HTTP con Swagger docs
  */
 export class ProductResponseDto {
@@ -32,7 +32,7 @@ export class ProductResponseDto {
   description: string | null;
 
   @ApiProperty({
-    description: 'Unit of measurement',
+    description: 'Unidad de medida',
     example: 'units',
   })
   unit: string;

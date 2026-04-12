@@ -5,7 +5,7 @@ import {
 } from '@reports/application/dtos';
 
 /**
- * HTTP Response DTO para item de movimiento
+ * DTO de Respuesta HTTP para item de movimiento
  */
 export class MovementHistoryItemResponseDto {
   @ApiProperty({ example: 'c1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6' })
@@ -49,7 +49,7 @@ export class MovementHistoryItemResponseDto {
 }
 
 /**
- * HTTP Response DTO para reporte de histórico de movimientos
+ * HTTP Response DTO for movement history report
  */
 export class MovementHistoryReportResponseDto {
   @ApiProperty({ type: [MovementHistoryItemResponseDto] })

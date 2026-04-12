@@ -32,7 +32,7 @@ async function bootstrap(): Promise<void> {
   });
   const port = process.env['PORT'] ?? 3000;
   await app.listen(port);
-  console.log(`🚀 API corriendo en http://localhost:${port}/api`);
-  console.log(`📚 Swagger en http://localhost:${port}/docs`);
+  console.log(`🚀 API running on http://localhost:${port}/api`);
+  console.log(`📚 Swagger at http://localhost:${port}/docs`);
 }
 void bootstrap();

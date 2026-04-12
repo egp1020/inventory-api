@@ -6,7 +6,7 @@ export type DomainErrorCode =
   | 'UNPROCESSABLE';
 
 /**
- * Base para todos los errores de dominio.
+ * Base for all domain errors.
  */
 export abstract class DomainError extends Error {
   constructor(
@@ -20,14 +20,14 @@ export abstract class DomainError extends Error {
 
 /** 401 */
 export class UnauthorizedError extends DomainError {
-  constructor(message: string = 'No autorizado') {
+  constructor(message: string = 'Unauthorized') {
     super('UNAUTHORIZED', message);
   }
 }
 
 /** 403 */
 export class ForbiddenError extends DomainError {
-  constructor(message: string = 'Acceso denegado') {
+  constructor(message: string = 'Access denied') {
     super('FORBIDDEN', message);
   }
 }
@@ -36,15 +36,15 @@ export class ForbiddenError extends DomainError {
 export class NotFoundError extends DomainError {
   constructor(entity: string, id?: string) {
     const msg = id
-      ? `${entity} con id '${id}' no encontrado`
-      : `${entity} no encontrado`;
+      ? `${entity} with id '${id}' not found`
+      : `${entity} not found`;
     super('NOT_FOUND', msg);
   }
 }
 
 /** 409 */
 export class ConflictError extends DomainError {
-  constructor(message: string = 'Conflicto de estado en el recurso') {
+  constructor(message: string = 'Resource state conflict') {
     super('CONFLICT', message);
   }
 }

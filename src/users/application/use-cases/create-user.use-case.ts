@@ -27,13 +27,13 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(command: CreateUserCommandDto): Promise<UserResultDto> {
-    // 1. Verificar que el email no exista
+    // 1. Check that email does not exist
     const existingUser = await this.userRepository.findByEmail(command.email);
     if (existingUser) {
       throw new UserAlreadyExistsError(command.email);
     }
 
-    // 2. Si es OPERATOR, validar que la bodega existe
+    // 2. If OPERATOR, validate that warehouse exists
     if (command.role === 'OPERATOR' && command.warehouseId) {
       const warehouseExists = await this.warehouseValidator.existsAndIsActive(
         command.warehouseId,
@@ -43,10 +43,10 @@ export class CreateUserUseCase {
       }
     }
 
-    // 3. Hash la contraseña
+    // 3. Hash password
     const passwordHash = await this.passwordHasher.hash(command.password);
 
-    // 4. Crear usuario
+    // 4. Create user
     const user = User.create({
       id: randomUUID(),
       email: command.email,
@@ -59,7 +59,7 @@ export class CreateUserUseCase {
 
     user.validateWarehouseAssignment(user.warehouseId);
 
-    // 5. Persistir
+    // 5. Persist
     const createdUser = await this.userRepository.create(user);
 
     return this.mapToUserResultDto(createdUser);
