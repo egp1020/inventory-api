@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { IMovementRepository } from '@movements/domain/ports';
 import { Movement } from '@movements/domain';
 import { Quantity } from '@movements/domain/value-objects';
@@ -37,6 +37,8 @@ const MOVEMENT_REPOSITORY = Symbol('MOVEMENT_REPOSITORY');
  */
 @Injectable()
 export class RegisterMovementUseCase {
+  private readonly logger = new Logger(RegisterMovementUseCase.name);
+
   constructor(
     @Inject(MOVEMENT_REPOSITORY)
     private readonly movementRepository: IMovementRepository,
@@ -52,30 +54,46 @@ export class RegisterMovementUseCase {
   async execute(
     command: RegisterMovementCommandDto,
   ): Promise<MovementResultDto> {
-    // Crear el movimiento
-    const quantity = Quantity.create(command.quantity);
-    const movement = Movement.create(
-      command.productId,
-      command.warehouseId,
-      command.userId,
-      command.type,
-      quantity,
-      command.notes,
+    this.logger.debug(
+      `Registrando movimiento: producto=${command.productId}, bodega=${command.warehouseId}, tipo=${command.type}, cantidad=${command.quantity}`,
     );
 
-    movement.validate();
-    // El repositorio hará las validaciones (existencia de producto, bodega, usuario, stock, etc.)
-    await this.movementRepository.save(movement);
+    try {
+      // Crear el movimiento
+      const quantity = Quantity.create(command.quantity);
+      const movement = Movement.create(
+        command.productId,
+        command.warehouseId,
+        command.userId,
+        command.type,
+        quantity,
+        command.notes,
+      );
 
-    return new MovementResultDto(
-      movement.getId(),
-      movement.getProductId(),
-      movement.getWarehouseId(),
-      movement.getUserId(),
-      movement.getTypeValue(),
-      movement.getQuantityValue(),
-      movement.getNotes(),
-      movement.getCreatedAt(),
-    );
+      movement.validate();
+      // El repositorio hará las validaciones (existencia de producto, bodega, usuario, stock, etc.)
+      await this.movementRepository.save(movement);
+
+      this.logger.log(
+        `Movimiento registrado exitosamente: id=${movement.getId()}, tipo=${movement.getTypeValue()}`,
+      );
+
+      return new MovementResultDto(
+        movement.getId(),
+        movement.getProductId(),
+        movement.getWarehouseId(),
+        movement.getUserId(),
+        movement.getTypeValue(),
+        movement.getQuantityValue(),
+        movement.getNotes(),
+        movement.getCreatedAt(),
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error al registrar movimiento: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+        error instanceof Error ? error.stack : '',
+      );
+      throw error;
+    }
   }
 }

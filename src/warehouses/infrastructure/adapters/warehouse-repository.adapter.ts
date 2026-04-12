@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@database/prisma/prisma.service';
 import { Warehouse } from '@warehouses/domain';
 import { IWarehouseRepository } from '@warehouses/domain/ports';
@@ -10,6 +10,8 @@ import { IWarehouseRepository } from '@warehouses/domain/ports';
  */
 @Injectable()
 export class WarehouseRepositoryAdapter implements IWarehouseRepository {
+  private readonly logger = new Logger(WarehouseRepositoryAdapter.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   async save(warehouse: Warehouse): Promise<void> {
@@ -27,12 +29,24 @@ export class WarehouseRepositoryAdapter implements IWarehouseRepository {
     });
 
     if (existing) {
+      this.logger.debug(
+        `Actualizando bodega: id=${warehouse.getId()}, nombre=${warehouse.getName()}`,
+      );
       await this.prisma.warehouse.update({
         where: { id: warehouse.getId() },
         data,
       });
+      this.logger.log(
+        `Bodega actualizada: id=${warehouse.getId()}, nombre=${warehouse.getName()}`,
+      );
     } else {
+      this.logger.debug(
+        `Creando bodega: nombre=${warehouse.getName()}, ubicación=${warehouse.getLocation()}`,
+      );
       await this.prisma.warehouse.create({ data });
+      this.logger.log(
+        `Bodega creada: id=${warehouse.getId()}, nombre=${warehouse.getName()}`,
+      );
     }
   }
 
@@ -123,8 +137,10 @@ export class WarehouseRepositoryAdapter implements IWarehouseRepository {
   async delete(id: string): Promise<void> {
     const warehouse = await this.findById(id);
     if (warehouse) {
+      this.logger.debug(`Eliminando bodega (soft delete): id=${id}`);
       warehouse.softDelete();
       await this.save(warehouse);
+      this.logger.log(`Bodega eliminada (soft delete): id=${id}`);
     }
   }
 }

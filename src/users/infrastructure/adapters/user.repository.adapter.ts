@@ -1,13 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@database/prisma/prisma.service';
 import type { IUserRepository } from '../../domain/ports/user.repository.port';
 import { User } from '../../domain/entities/user.entity';
 
 @Injectable()
 export class UserRepositoryAdapter implements IUserRepository {
+  private readonly logger = new Logger(UserRepositoryAdapter.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   async create(user: User): Promise<User> {
+    this.logger.debug(
+      `Creando usuario: email=${user.email.getValue()}, rol=${user.role}`,
+    );
     const userRaw = await this.prisma.user.create({
       data: {
         id: user.id,
@@ -17,6 +22,9 @@ export class UserRepositoryAdapter implements IUserRepository {
         warehouseId: user.warehouseId,
       },
     });
+    this.logger.log(
+      `Usuario creado: id=${user.id}, email=${user.email.getValue()}`,
+    );
     return this.toDomain(userRaw);
   }
 
@@ -59,6 +67,7 @@ export class UserRepositoryAdapter implements IUserRepository {
   }
 
   async update(id: string, user: Partial<User>): Promise<User> {
+    this.logger.debug(`Actualizando usuario: id=${id}`);
     const userRaw = await this.prisma.user.update({
       where: { id },
       data: {
@@ -67,14 +76,19 @@ export class UserRepositoryAdapter implements IUserRepository {
         warehouseId: user.warehouseId,
       },
     });
+    this.logger.log(
+      `Usuario actualizado: id=${id}, email=${userRaw.email}`,
+    );
     return this.toDomain(userRaw);
   }
 
   async softDelete(id: string): Promise<void> {
+    this.logger.debug(`Eliminando usuario (soft delete): id=${id}`);
     await this.prisma.user.update({
       where: { id },
       data: { deletedAt: new Date() },
     });
+    this.logger.log(`Usuario eliminado (soft delete): id=${id}`);
   }
 
   async existsByEmailExcludingId(

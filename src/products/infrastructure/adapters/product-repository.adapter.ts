@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@database/prisma/prisma.service';
 import { Product } from '@products/domain';
 import { IProductRepository } from '@products/domain/ports';
@@ -10,6 +10,8 @@ import { IProductRepository } from '@products/domain/ports';
  */
 @Injectable()
 export class ProductRepositoryAdapter implements IProductRepository {
+  private readonly logger = new Logger(ProductRepositoryAdapter.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   async save(product: Product): Promise<void> {
@@ -28,12 +30,24 @@ export class ProductRepositoryAdapter implements IProductRepository {
     });
 
     if (existing) {
+      this.logger.debug(
+        `Actualizando producto: id=${product.getId()}, sku=${product.getSKUValue()}`,
+      );
       await this.prisma.product.update({
         where: { id: product.getId() },
         data,
       });
+      this.logger.log(
+        `Producto actualizado: id=${product.getId()}, sku=${product.getSKUValue()}`,
+      );
     } else {
+      this.logger.debug(
+        `Creando producto: sku=${product.getSKUValue()}, nombre=${product.getName()}`,
+      );
       await this.prisma.product.create({ data });
+      this.logger.log(
+        `Producto creado: id=${product.getId()}, sku=${product.getSKUValue()}`,
+      );
     }
   }
 
@@ -148,8 +162,10 @@ export class ProductRepositoryAdapter implements IProductRepository {
   async delete(id: string): Promise<void> {
     const product = await this.findById(id);
     if (product) {
+      this.logger.debug(`Eliminando producto: id=${id}`);
       product.softDelete();
       await this.save(product);
+      this.logger.log(`Producto eliminado (soft delete): id=${id}`);
     }
   }
 
