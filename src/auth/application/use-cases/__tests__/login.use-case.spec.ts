@@ -3,7 +3,10 @@ import { IUserRepository } from '../../../domain/ports/user.repository.port';
 import { IPasswordHasher } from '../../ports/password-hasher.port';
 import { ITokenGenerator } from '../../ports/token-generator.port';
 import { User } from '../../../domain/entities/user.entity';
-import { InvalidCredentialsError, UserInactiveError } from '../../../domain/errors/auth.errors';
+import {
+  InvalidCredentialsError,
+  UserInactiveError,
+} from '../../../domain/errors/auth.errors';
 import { LoginCommandDto } from '../../dtos';
 
 describe('LoginUseCase', () => {
@@ -65,7 +68,10 @@ describe('LoginUseCase', () => {
         refreshToken: 'refresh-token',
       });
       expect(userRepository.findByEmail).toHaveBeenCalledWith(email);
-      expect(passwordHasher.compare).toHaveBeenCalledWith(password, 'hashed-password');
+      expect(passwordHasher.compare).toHaveBeenCalledWith(
+        password,
+        'hashed-password',
+      );
     });
 
     it('should throw InvalidCredentialsError when user not found', async () => {
@@ -73,8 +79,13 @@ describe('LoginUseCase', () => {
       userRepository.findByEmail.mockResolvedValue(null);
 
       // Act & Assert
-      const command: LoginCommandDto = { email: 'nonexistent@test.com', password: 'password123' };
-      await expect(useCase.execute(command)).rejects.toThrow(InvalidCredentialsError);
+      const command: LoginCommandDto = {
+        email: 'nonexistent@test.com',
+        password: 'password123',
+      };
+      await expect(useCase.execute(command)).rejects.toThrow(
+        InvalidCredentialsError,
+      );
     });
 
     it('should throw InvalidCredentialsError when password is invalid', async () => {
@@ -92,8 +103,13 @@ describe('LoginUseCase', () => {
       passwordHasher.compare.mockResolvedValue(false);
 
       // Act & Assert
-      const command: LoginCommandDto = { email: 'admin@test.com', password: 'wrong-password' };
-      await expect(useCase.execute(command)).rejects.toThrow(InvalidCredentialsError);
+      const command: LoginCommandDto = {
+        email: 'admin@test.com',
+        password: 'wrong-password',
+      };
+      await expect(useCase.execute(command)).rejects.toThrow(
+        InvalidCredentialsError,
+      );
     });
 
     it('should throw UserInactiveError when user is deleted', async () => {
@@ -111,7 +127,10 @@ describe('LoginUseCase', () => {
       userRepository.findByEmail.mockResolvedValue(user);
 
       // Act & Assert
-      const command: LoginCommandDto = { email: 'admin@test.com', password: 'password123' };
+      const command: LoginCommandDto = {
+        email: 'admin@test.com',
+        password: 'password123',
+      };
       await expect(useCase.execute(command)).rejects.toThrow(UserInactiveError);
     });
   });

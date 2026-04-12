@@ -2,7 +2,10 @@ import { CreateUserUseCase } from '../create-user.use-case';
 import type { IUserRepository } from '../../../domain/ports/user.repository.port';
 import type { IWarehouseValidator } from '../../../domain/ports/user.repository.port';
 import type { IPasswordHasher } from '../../../../auth/application/ports/password-hasher.port';
-import { UserAlreadyExistsError, WarehouseNotFoundError } from '../../../domain/errors/user.errors';
+import {
+  UserAlreadyExistsError,
+  WarehouseNotFoundError,
+} from '../../../domain/errors/user.errors';
 import { CreateUserCommandDto } from '../../dtos';
 
 describe('CreateUserUseCase', () => {
@@ -31,7 +34,11 @@ describe('CreateUserUseCase', () => {
       compare: jest.fn(),
     };
 
-    useCase = new CreateUserUseCase(userRepository, passwordHasher, warehouseValidator);
+    useCase = new CreateUserUseCase(
+      userRepository,
+      passwordHasher,
+      warehouseValidator,
+    );
   });
 
   describe('execute', () => {
@@ -68,7 +75,9 @@ describe('CreateUserUseCase', () => {
       expect(result).toBeDefined();
       expect(result.email).toBe('new@example.com');
       expect(result.role).toBe('ADMIN');
-      expect(userRepository.findByEmail).toHaveBeenCalledWith('new@example.com');
+      expect(userRepository.findByEmail).toHaveBeenCalledWith(
+        'new@example.com',
+      );
     });
 
     it('should throw UserAlreadyExistsError if email exists', async () => {
@@ -86,7 +95,9 @@ describe('CreateUserUseCase', () => {
         role: 'ADMIN',
       };
 
-      await expect(useCase.execute(command)).rejects.toThrow(UserAlreadyExistsError);
+      await expect(useCase.execute(command)).rejects.toThrow(
+        UserAlreadyExistsError,
+      );
     });
 
     it('should throw WarehouseNotFoundError if warehouse not found for OPERATOR', async () => {
@@ -100,7 +111,9 @@ describe('CreateUserUseCase', () => {
         warehouseId: 'invalid-warehouse-id',
       };
 
-      await expect(useCase.execute(command)).rejects.toThrow(WarehouseNotFoundError);
+      await expect(useCase.execute(command)).rejects.toThrow(
+        WarehouseNotFoundError,
+      );
     });
   });
 });

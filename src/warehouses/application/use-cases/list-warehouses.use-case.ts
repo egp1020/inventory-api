@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IWarehouseRepository } from '@warehouses/domain';
-import { PaginatedWarehouseResultDto, WarehouseResultDto } from '@warehouses/application/dtos';
+import {
+  PaginatedWarehouseResultDto,
+  WarehouseResultDto,
+} from '@warehouses/application/dtos';
 
 const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
 
@@ -19,14 +22,9 @@ export class ListWarehousesUseCase {
     page: number,
     limit: number,
   ): Promise<PaginatedWarehouseResultDto> {
-    const result = await this.warehouseRepository.findAllPaginated(
-      page,
-      limit,
-    );
+    const result = await this.warehouseRepository.findAllPaginated(page, limit);
 
-    const data = result.data.map((warehouse) =>
-      this.mapToResultDto(warehouse),
-    );
+    const data = result.data.map((warehouse) => this.mapToResultDto(warehouse));
 
     return new PaginatedWarehouseResultDto(
       data,

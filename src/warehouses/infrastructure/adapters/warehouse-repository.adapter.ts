@@ -128,4 +128,3 @@ export class WarehouseRepositoryAdapter implements IWarehouseRepository {
     }
   }
 }
-

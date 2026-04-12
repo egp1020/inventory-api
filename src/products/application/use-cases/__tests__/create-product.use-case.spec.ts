@@ -1,5 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateProductUseCase, PRODUCT_REPOSITORY } from '../create-product.use-case';
+import {
+  CreateProductUseCase,
+  PRODUCT_REPOSITORY,
+} from '../create-product.use-case';
 import {
   CreateProductCommandDto,
   ProductResultDto,

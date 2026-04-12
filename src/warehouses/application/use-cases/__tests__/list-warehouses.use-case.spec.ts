@@ -1,5 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ListWarehousesUseCase, WAREHOUSE_REPOSITORY } from '../list-warehouses.use-case';
+import {
+  ListWarehousesUseCase,
+  WAREHOUSE_REPOSITORY,
+} from '../list-warehouses.use-case';
 import { PaginatedWarehouseResultDto } from '@warehouses/application/dtos';
 import { Warehouse, Capacity } from '@warehouses/domain';
 import { IWarehouseRepository } from '@warehouses/domain';

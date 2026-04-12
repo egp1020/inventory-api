@@ -9,7 +9,10 @@ export interface IWarehouseRepository {
   save(warehouse: Warehouse): Promise<void>;
   findById(id: string): Promise<Warehouse | null>;
   findAll(): Promise<Warehouse[]>;
-  findAllPaginated(page: number, limit: number): Promise<{
+  findAllPaginated(
+    page: number,
+    limit: number,
+  ): Promise<{
     data: Warehouse[];
     total: number;
     page: number;

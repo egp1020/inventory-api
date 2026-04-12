@@ -32,7 +32,10 @@ export class WarehouseNotFoundError extends DomainError {
  */
 export class InvalidRoleForWarehouseError extends DomainError {
   constructor() {
-    super('UNPROCESSABLE', 'Solo los usuarios con rol OPERATOR pueden tener una bodega asignada');
+    super(
+      'UNPROCESSABLE',
+      'Solo los usuarios con rol OPERATOR pueden tener una bodega asignada',
+    );
   }
 }
 

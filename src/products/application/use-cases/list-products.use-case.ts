@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IProductRepository } from '@products/domain';
-import { PaginatedProductResultDto, ProductResultDto } from '@products/application/dtos';
+import {
+  PaginatedProductResultDto,
+  ProductResultDto,
+} from '@products/application/dtos';
 
 const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
@@ -21,9 +24,7 @@ export class ListProductsUseCase {
   ): Promise<PaginatedProductResultDto> {
     const result = await this.productRepository.findAllPaginated(page, limit);
 
-    const data = result.data.map((product) =>
-      this.mapToResultDto(product),
-    );
+    const data = result.data.map((product) => this.mapToResultDto(product));
 
     return new PaginatedProductResultDto(
       data,

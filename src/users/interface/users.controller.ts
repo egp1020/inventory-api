@@ -27,8 +27,16 @@ import { ListUsersUseCase } from '../application/use-cases/list-users.use-case';
 import { GetUserByIdUseCase } from '../application/use-cases/get-user-by-id.use-case';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { UserResponseDto, PaginatedUsersResponseDto } from './dtos/user-response.dto';
-import { CreateUserCommandDto, UpdateUserCommandDto, UserResultDto, PaginatedUserResultDto } from '../application/dtos';
+import {
+  UserResponseDto,
+  PaginatedUsersResponseDto,
+} from './dtos/user-response.dto';
+import {
+  CreateUserCommandDto,
+  UpdateUserCommandDto,
+  UserResultDto,
+  PaginatedUserResultDto,
+} from '../application/dtos';
 
 @ApiTags('users')
 @ApiBearerAuth('access-token')
@@ -59,7 +67,8 @@ export class UsersController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ): Promise<PaginatedUsersResponseDto> {
-    const appResult: PaginatedUserResultDto = await this.listUsersUseCase.execute(page, limit);
+    const appResult: PaginatedUserResultDto =
+      await this.listUsersUseCase.execute(page, limit);
     return {
       data: appResult.data.map((u) => this.toResponse(u)),
       total: appResult.total,
@@ -92,7 +101,8 @@ export class UsersController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Crear usuario',
-    description: 'Solo ADMIN. Crea un nuevo usuario y asigna bodega si es OPERATOR',
+    description:
+      'Solo ADMIN. Crea un nuevo usuario y asigna bodega si es OPERATOR',
   })
   @ApiResponse({
     status: 201,
@@ -110,7 +120,8 @@ export class UsersController {
       role: dto.role,
       warehouseId: dto.warehouseId || null,
     };
-    const appResult: UserResultDto = await this.createUserUseCase.execute(command);
+    const appResult: UserResultDto =
+      await this.createUserUseCase.execute(command);
     return this.toResponse(appResult);
   }
 
@@ -138,7 +149,10 @@ export class UsersController {
       role: dto.role,
       warehouseId: dto.warehouseId,
     };
-    const appResult: UserResultDto = await this.updateUserUseCase.execute(id, command);
+    const appResult: UserResultDto = await this.updateUserUseCase.execute(
+      id,
+      command,
+    );
     return this.toResponse(appResult);
   }
 

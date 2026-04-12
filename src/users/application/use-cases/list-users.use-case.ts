@@ -12,7 +12,10 @@ export class ListUsersUseCase {
   ) {}
 
   async execute(page: number, limit: number): Promise<PaginatedUserResultDto> {
-    const { data: users, total } = await this.userRepository.findAll(page, limit);
+    const { data: users, total } = await this.userRepository.findAll(
+      page,
+      limit,
+    );
     const totalPages = Math.ceil(total / limit);
 
     return {

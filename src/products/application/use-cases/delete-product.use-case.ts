@@ -1,5 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ProductNotFoundError, ProductHasMovementsError } from '@products/domain';
+import {
+  ProductNotFoundError,
+  ProductHasMovementsError,
+} from '@products/domain';
 import type { IProductRepository } from '@products/domain';
 
 const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');

@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IUserRepository } from '../../domain/ports/user.repository.port';
 import { USER_REPOSITORY } from '../../domain/ports/user.repository.port';
-import { InvalidRefreshTokenError, UserInactiveError } from '../../domain/errors/auth.errors';
+import {
+  InvalidRefreshTokenError,
+  UserInactiveError,
+} from '../../domain/errors/auth.errors';
 import type { ITokenGenerator } from '../ports/token-generator.port';
 import { TOKEN_GENERATOR } from '../ports/token-generator.port';
 import { AuthResultDto, RefreshTokenCommandDto } from '../dtos';
@@ -17,7 +20,9 @@ export class RefreshTokenUseCase {
 
   async execute(command: RefreshTokenCommandDto): Promise<AuthResultDto> {
     // 1. Validar refresh token y extraer payload
-    const payload = this.tokenGenerator.validateRefreshToken(command.refreshToken);
+    const payload = this.tokenGenerator.validateRefreshToken(
+      command.refreshToken,
+    );
     if (!payload) {
       throw new InvalidRefreshTokenError();
     }

@@ -10,6 +10,8 @@ export class WarehouseValidatorAdapter implements IWarehouseValidator {
     const warehouse = await this.prisma.warehouse.findUnique({
       where: { id },
     });
-    return warehouse !== null && warehouse.isActive && warehouse.deletedAt === null;
+    return (
+      warehouse !== null && warehouse.isActive && warehouse.deletedAt === null
+    );
   }
 }

@@ -53,9 +53,7 @@ export class AuthController {
     status: 401,
     description: 'Refresh token inválido o expirado',
   })
-  async refresh(
-    @Body() dto: RefreshTokenRequestDto,
-  ): Promise<AuthResponseDto> {
+  async refresh(@Body() dto: RefreshTokenRequestDto): Promise<AuthResponseDto> {
     const command: RefreshTokenCommandDto = {
       refreshToken: dto.refreshToken,
     };

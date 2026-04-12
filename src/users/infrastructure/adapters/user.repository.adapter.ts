@@ -34,7 +34,10 @@ export class UserRepositoryAdapter implements IUserRepository {
     return userRaw ? this.toDomain(userRaw) : null;
   }
 
-  async findAll(page: number, limit: number): Promise<{ data: User[]; total: number }> {
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<{ data: User[]; total: number }> {
     const skip = (page - 1) * limit;
 
     const [usersRaw, total] = await Promise.all([
@@ -74,7 +77,10 @@ export class UserRepositoryAdapter implements IUserRepository {
     });
   }
 
-  async existsByEmailExcludingId(email: string, excludeId: string): Promise<boolean> {
+  async existsByEmailExcludingId(
+    email: string,
+    excludeId: string,
+  ): Promise<boolean> {
     const count = await this.prisma.user.count({
       where: {
         email: email.toLowerCase(),
