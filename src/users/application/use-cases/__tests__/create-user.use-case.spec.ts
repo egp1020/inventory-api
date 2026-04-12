@@ -43,6 +43,7 @@ describe('CreateUserUseCase', () => {
 
   describe('execute', () => {
     it('should create a user successfully', async () => {
+      // Arrange
       userRepository.findByEmail.mockResolvedValue(null);
       passwordHasher.hash.mockResolvedValue('hashed-password');
 
@@ -70,8 +71,10 @@ describe('CreateUserUseCase', () => {
         role: 'ADMIN',
       };
 
+      // Act
       const result = await useCase.execute(command);
 
+      // Assert
       expect(result).toBeDefined();
       expect(result.email).toBe('new@example.com');
       expect(result.role).toBe('ADMIN');
@@ -81,6 +84,7 @@ describe('CreateUserUseCase', () => {
     });
 
     it('should throw UserAlreadyExistsError if email exists', async () => {
+      // Arrange
       const existingUser = {
         id: 'user-id',
         email: { getValue: () => 'existing@example.com' },
@@ -95,12 +99,14 @@ describe('CreateUserUseCase', () => {
         role: 'ADMIN',
       };
 
+      // Act & Assert
       await expect(useCase.execute(command)).rejects.toThrow(
         UserAlreadyExistsError,
       );
     });
 
     it('should throw WarehouseNotFoundError if warehouse not found for OPERATOR', async () => {
+      // Arrange
       userRepository.findByEmail.mockResolvedValue(null);
       warehouseValidator.existsAndIsActive.mockResolvedValue(false);
 
@@ -111,6 +117,7 @@ describe('CreateUserUseCase', () => {
         warehouseId: 'invalid-warehouse-id',
       };
 
+      // Act & Assert
       await expect(useCase.execute(command)).rejects.toThrow(
         WarehouseNotFoundError,
       );

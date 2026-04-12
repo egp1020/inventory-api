@@ -10,6 +10,7 @@ describe('GetMovementHistoryReportUseCase', () => {
   let mockRepository: Partial<IReportRepository>;
 
   beforeEach(async () => {
+    // Arrange
     const mockMovements = [
       new MovementHistoryItemDto(
         'mov-1',
@@ -49,8 +50,10 @@ describe('GetMovementHistoryReportUseCase', () => {
   });
 
   it('should get movement history report with default pagination', async () => {
+    // Act
     const result = await useCase.execute();
 
+    // Assert
     expect(result).toBeDefined();
     expect(result.data).toHaveLength(2);
     expect(result.total).toBe(2);
@@ -60,8 +63,10 @@ describe('GetMovementHistoryReportUseCase', () => {
   });
 
   it('should filter by product id', async () => {
+    // Act
     const result = await useCase.execute('prod-123');
 
+    // Assert
     expect(mockRepository.getMovementHistoryReport).toHaveBeenCalledWith(
       'prod-123',
       undefined,
@@ -74,8 +79,10 @@ describe('GetMovementHistoryReportUseCase', () => {
   });
 
   it('should filter by warehouse id', async () => {
+    // Act
     const result = await useCase.execute(undefined, 'warehouse-456');
 
+    // Assert
     expect(mockRepository.getMovementHistoryReport).toHaveBeenCalledWith(
       undefined,
       'warehouse-456',
@@ -88,8 +95,10 @@ describe('GetMovementHistoryReportUseCase', () => {
   });
 
   it('should filter by movement type', async () => {
+    // Act
     const result = await useCase.execute(undefined, undefined, 'ENTRADA');
 
+    // Assert
     expect(mockRepository.getMovementHistoryReport).toHaveBeenCalledWith(
       undefined,
       undefined,
@@ -102,9 +111,11 @@ describe('GetMovementHistoryReportUseCase', () => {
   });
 
   it('should filter by date range', async () => {
+    // Arrange
     const startDate = new Date('2026-04-01');
     const endDate = new Date('2026-04-30');
 
+    // Act
     const result = await useCase.execute(
       undefined,
       undefined,
@@ -115,6 +126,7 @@ describe('GetMovementHistoryReportUseCase', () => {
       10,
     );
 
+    // Assert
     expect(mockRepository.getMovementHistoryReport).toHaveBeenCalledWith(
       undefined,
       undefined,
@@ -127,6 +139,7 @@ describe('GetMovementHistoryReportUseCase', () => {
   });
 
   it('should handle pagination', async () => {
+    // Act
     const result = await useCase.execute(
       undefined,
       undefined,
@@ -137,6 +150,7 @@ describe('GetMovementHistoryReportUseCase', () => {
       20,
     );
 
+    // Assert
     expect(mockRepository.getMovementHistoryReport).toHaveBeenCalledWith(
       undefined,
       undefined,
@@ -149,9 +163,11 @@ describe('GetMovementHistoryReportUseCase', () => {
   });
 
   it('should handle multiple filters combined', async () => {
+    // Arrange
     const startDate = new Date('2026-04-01');
     const endDate = new Date('2026-04-30');
 
+    // Act
     const result = await useCase.execute(
       'prod-123',
       'warehouse-456',
@@ -162,6 +178,7 @@ describe('GetMovementHistoryReportUseCase', () => {
       15,
     );
 
+    // Assert
     expect(mockRepository.getMovementHistoryReport).toHaveBeenCalledWith(
       'prod-123',
       'warehouse-456',
@@ -174,6 +191,7 @@ describe('GetMovementHistoryReportUseCase', () => {
   });
 
   it('should return empty results when no movements match', async () => {
+    // Arrange
     mockRepository.getMovementHistoryReport = jest
       .fn()
       .mockResolvedValue(new MovementHistoryReportResultDto([], 0, 1, 10, 0));
@@ -181,8 +199,11 @@ describe('GetMovementHistoryReportUseCase', () => {
     useCase = new GetMovementHistoryReportUseCase(
       mockRepository as IReportRepository,
     );
+
+    // Act
     const result = await useCase.execute();
 
+    // Assert
     expect(result.data).toHaveLength(0);
     expect(result.total).toBe(0);
   });

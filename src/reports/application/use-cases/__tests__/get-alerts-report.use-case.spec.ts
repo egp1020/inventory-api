@@ -7,6 +7,7 @@ describe('GetAlertsReportUseCase', () => {
   let mockRepository: Partial<IReportRepository>;
 
   beforeEach(async () => {
+    // Arrange
     const mockAlerts = [
       new AlertItemDto(
         'prod-1',
@@ -47,8 +48,10 @@ describe('GetAlertsReportUseCase', () => {
   });
 
   it('should get alerts report', async () => {
+    // Act
     const result = await useCase.execute();
 
+    // Assert
     expect(result).toBeDefined();
     expect(result.totalAlerts).toBe(3);
     expect(result.alerts).toHaveLength(3);
@@ -56,8 +59,10 @@ describe('GetAlertsReportUseCase', () => {
   });
 
   it('should calculate stock deficit correctly', async () => {
+    // Act
     const result = await useCase.execute();
 
+    // Assert
     const firstAlert = result.alerts[0];
     expect(firstAlert.stockDeficit).toBe(
       firstAlert.minStockAlert - firstAlert.currentStock,
@@ -65,15 +70,19 @@ describe('GetAlertsReportUseCase', () => {
   });
 
   it('should identify critical stock (< 10% of minimum)', async () => {
+    // Act
     const result = await useCase.execute();
 
+    // Assert
     // Monitor tiene stock 2 de mínimo 30 (6.7% < 10%)
     expect(result.criticalCount).toBeGreaterThan(0);
   });
 
   it('should sort alerts by stock deficit descending', async () => {
+    // Act
     const result = await useCase.execute();
 
+    // Assert
     for (let i = 0; i < result.alerts.length - 1; i++) {
       expect(result.alerts[i].stockDeficit).toBeGreaterThanOrEqual(
         result.alerts[i + 1].stockDeficit,
@@ -82,13 +91,17 @@ describe('GetAlertsReportUseCase', () => {
   });
 
   it('should handle no alerts scenario', async () => {
+    // Arrange
     mockRepository.getAlertsReport = jest
       .fn()
       .mockResolvedValue(new AlertsReportResultDto([]));
 
     useCase = new GetAlertsReportUseCase(mockRepository as IReportRepository);
+
+    // Act
     const result = await useCase.execute();
 
+    // Assert
     expect(result.totalAlerts).toBe(0);
     expect(result.alerts).toHaveLength(0);
     expect(result.criticalCount).toBe(0);

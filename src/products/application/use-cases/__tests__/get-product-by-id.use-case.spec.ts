@@ -33,6 +33,7 @@ describe('GetProductByIdUseCase', () => {
 
   describe('execute', () => {
     it('should retrieve a product by id', async () => {
+      // Arrange
       const product = Product.create(
         '123',
         SKU.create('TEST001'),
@@ -44,8 +45,10 @@ describe('GetProductByIdUseCase', () => {
 
       mockRepository.findById.mockResolvedValue(product);
 
+      // Act
       const result = await useCase.execute('123');
 
+      // Assert
       expect(result).toBeInstanceOf(ProductResultDto);
       expect(result.sku).toBe('TEST001');
       // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -53,8 +56,10 @@ describe('GetProductByIdUseCase', () => {
     });
 
     it('should throw error when product not found', async () => {
+      // Arrange
       mockRepository.findById.mockResolvedValue(null);
 
+      // Act & Assert
       await expect(useCase.execute('non-existent')).rejects.toThrow(
         ProductNotFoundError,
       );

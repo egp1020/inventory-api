@@ -32,6 +32,7 @@ describe('ListWarehousesUseCase', () => {
 
   describe('execute', () => {
     it('should list warehouses with pagination', async () => {
+      // Arrange
       const warehouse1 = Warehouse.create(
         '1',
         'Warehouse 1',
@@ -53,8 +54,10 @@ describe('ListWarehousesUseCase', () => {
         totalPages: 1,
       });
 
+      // Act
       const result = await useCase.execute(1, 10);
 
+      // Assert
       expect(result).toBeInstanceOf(PaginatedWarehouseResultDto);
       expect(result.data).toHaveLength(2);
       expect(result.total).toBe(2);

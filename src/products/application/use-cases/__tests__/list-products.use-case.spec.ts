@@ -33,6 +33,7 @@ describe('ListProductsUseCase', () => {
 
   describe('execute', () => {
     it('should list products with pagination', async () => {
+      // Arrange
       const product1 = Product.create(
         '1',
         SKU.create('PROD001'),
@@ -58,8 +59,10 @@ describe('ListProductsUseCase', () => {
         totalPages: 1,
       });
 
+      // Act
       const result = await useCase.execute(1, 10);
 
+      // Assert
       expect(result).toBeInstanceOf(PaginatedProductResultDto);
       expect(result.data).toHaveLength(2);
       expect(result.total).toBe(2);

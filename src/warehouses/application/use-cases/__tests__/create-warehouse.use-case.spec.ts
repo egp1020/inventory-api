@@ -35,14 +35,17 @@ describe('CreateWarehouseUseCase', () => {
 
   describe('execute', () => {
     it('should create a warehouse successfully', async () => {
+      // Arrange
       const command = new CreateWarehouseCommandDto(
         'Main Warehouse',
         'Madrid',
         5000,
       );
 
+      // Act
       const result = await useCase.execute(command);
 
+      // Assert
       expect(result).toBeInstanceOf(WarehouseResultDto);
       expect(result.name).toBe('Main Warehouse');
       expect(result.location).toBe('Madrid');
@@ -53,26 +56,31 @@ describe('CreateWarehouseUseCase', () => {
     });
 
     it('should create warehouse with valid capacity', async () => {
+      // Arrange
       const command = new CreateWarehouseCommandDto(
         'Secondary Warehouse',
         'Barcelona',
         10000,
       );
 
+      // Act
       const result = await useCase.execute(command);
 
+      // Assert
       expect(result.capacity).toBe(10000);
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockRepository.save as jest.Mock).toHaveBeenCalled();
     });
 
     it('should fail with invalid capacity', async () => {
+      // Arrange
       const command = new CreateWarehouseCommandDto(
         'Invalid Warehouse',
         'Valencia',
         0,
       );
 
+      // Act & Assert
       await expect(useCase.execute(command)).rejects.toThrow();
     });
   });
