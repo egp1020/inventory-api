@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ProductNotFoundError } from '@products/domain';
 import type { IProductRepository } from '@products/domain';
-import { ProductResultDto } from '@products/application/dtos';
+import { ProductResultDto, PRODUCT_REPOSITORY } from '@products/application';
 
-const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 /**
  * GetProductByIdUseCase

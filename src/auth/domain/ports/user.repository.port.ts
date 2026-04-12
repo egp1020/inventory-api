@@ -33,7 +33,3 @@ export interface IUserRepository {
   softDelete(id: string): Promise<void>;
 }
 
-/**
- * Token de inyección de dependencias para el repositorio.
- */
-export const USER_REPOSITORY = Symbol('USER_REPOSITORY');

@@ -7,3 +7,5 @@ export {
   DeleteWarehouseUseCase,
 } from './use-cases';
 export type { IWarehouseRepository } from './ports';
+export { WAREHOUSE_REPOSITORY } from './symbols';
+

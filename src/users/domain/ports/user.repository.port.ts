@@ -46,8 +46,6 @@ export interface IUserRepository {
   existsByEmailExcludingId(email: string, excludeId: string): Promise<boolean>;
 }
 
-export const USER_REPOSITORY = Symbol('USER_REPOSITORY');
-
 /**
  * Port para validación de bodegas.
  * Usado en casos de uso para verificar que una bodega existe.
@@ -59,4 +57,3 @@ export interface IWarehouseValidator {
   existsAndIsActive(id: string): Promise<boolean>;
 }
 
-export const WAREHOUSE_VALIDATOR = Symbol('WAREHOUSE_VALIDATOR');

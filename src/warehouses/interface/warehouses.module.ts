@@ -7,10 +7,9 @@ import {
   UpdateWarehouseUseCase,
   ListWarehousesUseCase,
   DeleteWarehouseUseCase,
+  WAREHOUSE_REPOSITORY,
 } from '@warehouses/application';
 import { WarehouseController } from './warehouses.controller';
-
-const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
 
 @Module({
   controllers: [WarehouseController],
