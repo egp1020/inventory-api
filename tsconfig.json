@@ -23,7 +23,9 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@shared/*": ["src/shared/*"],
-      "@database/*": ["src/database/*"]
+      "@database/*": ["src/database/*"],
+      "@auth/*": ["src/auth/*"],
+      "@users/*": ["src/users/*"]
     }
   }
 }
