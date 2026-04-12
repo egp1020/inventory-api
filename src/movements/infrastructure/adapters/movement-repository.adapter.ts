@@ -9,6 +9,7 @@ import {
   UnauthorizedMovementError,
   InsufficientStockError,
 } from '@movements/domain/errors';
+import { MovementTypeMapper } from '@movements/infrastructure/mappers';
 
 /**
  * MovementRepositoryAdapter
@@ -110,8 +111,7 @@ export class MovementRepositoryAdapter implements IMovementRepository {
       productId: movement.getProductId(),
       warehouseId: movement.getWarehouseId(),
       userId: movement.getUserId(),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      type: movement.getTypeValue() as any, // Cast para hacer match con enum de Prisma
+      type: MovementTypeMapper.toPersistence(movement.getTypeValue()),
       quantity: movement.getQuantityValue(),
       notes: movement.getNotes(),
       createdAt: movement.getCreatedAt(),
