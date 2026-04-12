@@ -4,10 +4,10 @@ import * as bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting database seed de base de datos...');
+  console.log('🌱 Iniciando siembra de base de datos...');
 
   // Limpiar datos existentes
-  console.log('🗑️ Cleaning previous data previos...');
+  console.log('🗑️ Limpiando datos previos...');
   await prisma.stockMovement.deleteMany({});
   await prisma.product.deleteMany({});
   await prisma.user.deleteMany({});
@@ -115,7 +115,7 @@ async function main() {
   products.forEach((p) => console.log(`✓ ${p.sku} - ${p.name}`));
 
   // 5. Create initial movements (ENTRADA)
-  console.log('📊 Creating movements iniciales...');
+  console.log('📊 Creando movimientos iniciales...');
 
   const now = new Date();
   const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -236,9 +236,9 @@ async function main() {
     }),
   ]);
 
-  console.log(`✓ ${movements.length} movimientos createds`);
+  console.log(`✓ ${movements.length} movimientos creados`);
 
-  console.log('\n✅ Seed completed exitosamente');
+  console.log('\n✅ Siembra completada exitosamente');
   console.log('\n📋 Datos de prueba:');
   console.log('┌─────────────────────────────────────┐');
   console.log('│ ADMIN');
