@@ -14,9 +14,7 @@ describe('RegisterMovementUseCase', () => {
     };
 
     // Instanciar directamente sin Testing Module
-    useCase = new RegisterMovementUseCase(
-      mockRepository as IMovementRepository,
-    );
+    useCase = new RegisterMovementUseCase(mockRepository);
   });
 
   it('should register an ENTRADA movement successfully', async () => {

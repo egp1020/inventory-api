@@ -58,7 +58,9 @@ export class AlertsReportResponseDto {
   criticalCount!: number;
 
   constructor(result: AlertsReportResultDto) {
-    this.alerts = result.alerts.map((a) => new AlertItemResponseDto(a));
+    this.alerts = result.alerts.map(
+      (a: AlertItemDto) => new AlertItemResponseDto(a),
+    );
     this.totalAlerts = result.totalAlerts;
     this.criticalCount = result.criticalCount;
   }

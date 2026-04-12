@@ -69,7 +69,7 @@ export class MovementsController {
     const command = new RegisterMovementCommandDto(
       request.productId,
       request.warehouseId,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
       userId,
       request.type,
       request.quantity,
@@ -116,8 +116,7 @@ export class MovementsController {
     );
 
     return new PaginatedMovementResponseDto(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      result.data.map((m) => new MovementResponseDto(m)),
+      result.data.map((m: MovementResultDto) => new MovementResponseDto(m)),
       result.page,
       result.limit,
       result.total,

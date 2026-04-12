@@ -10,11 +10,10 @@ export class MovementTypeMapper {
   /**
    * Convierte MovementType del dominio a Prisma
    */
-  static toPersistence(domainType: string | DomainMovementType): PrismaMovementType {
-    if (
-      domainType === DomainMovementType.ENTRADA ||
-      domainType === 'ENTRADA'
-    ) {
+  static toPersistence(
+    domainType: string | DomainMovementType,
+  ): PrismaMovementType {
+    if (domainType === DomainMovementType.ENTRADA || domainType === 'ENTRADA') {
       return PrismaMovementType.ENTRADA;
     }
     if (domainType === DomainMovementType.SALIDA || domainType === 'SALIDA') {
@@ -26,9 +25,7 @@ export class MovementTypeMapper {
   /**
    * Convierte MovementType de Prisma al dominio
    */
-  static toDomain(
-    prismaType: PrismaMovementType | string,
-  ): DomainMovementType {
+  static toDomain(prismaType: PrismaMovementType | string): DomainMovementType {
     if (prismaType === PrismaMovementType.ENTRADA || prismaType === 'ENTRADA') {
       return DomainMovementType.ENTRADA;
     }
