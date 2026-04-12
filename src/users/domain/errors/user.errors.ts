@@ -30,7 +30,7 @@ export class WarehouseNotFoundError extends DomainError {
 /**
  * Error when attempting to reassign warehouse to a user that is not OPERATOR.
  */
-export class InvalidRoleeForWarehouseError extends DomainError {
+export class InvalidRoleForWarehouseError extends DomainError {
   constructor() {
     super(
       'UNPROCESSABLE',
