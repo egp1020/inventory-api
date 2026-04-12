@@ -8,8 +8,9 @@ import type { IWarehouseRepository } from '@warehouses/domain';
 import {
   CreateWarehouseCommandDto,
   WarehouseResultDto,
-  WAREHOUSE_REPOSITORY,
-} from '@warehouses/application';
+} from '@warehouses/application/dtos';
+
+const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
 
 /**
  * CreateWarehouseUseCase

@@ -8,7 +8,9 @@ import { UpdateUserUseCase } from './application/use-cases/update-user.use-case'
 import { DeleteUserUseCase } from './application/use-cases/delete-user.use-case';
 import { ListUsersUseCase } from './application/use-cases/list-users.use-case';
 import { GetUserByIdUseCase } from './application/use-cases/get-user-by-id.use-case';
-import { USER_REPOSITORY, WAREHOUSE_VALIDATOR } from './application/symbols';
+
+// Domain Ports
+import { USER_REPOSITORY, WAREHOUSE_VALIDATOR } from './domain/ports/user.repository.port';
 
 // Infrastructure
 import { UserRepositoryAdapter } from './infrastructure/adapters/user.repository.adapter';

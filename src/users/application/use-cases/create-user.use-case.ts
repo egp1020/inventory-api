@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { USER_REPOSITORY, WAREHOUSE_VALIDATOR } from '../symbols';
-import type { IUserRepository, IWarehouseValidator } from '../../domain/ports/user.repository.port';
+import type { IUserRepository } from '../../domain/ports/user.repository.port';
+import { USER_REPOSITORY, WAREHOUSE_VALIDATOR } from '../../domain/ports/user.repository.port';
+import type { IWarehouseValidator } from '../../domain/ports/user.repository.port';
 import { User } from '../../domain/entities/user.entity';
 import { UserAlreadyExistsError, WarehouseNotFoundError } from '../../domain/errors/user.errors';
 import type { IPasswordHasher } from '../../../auth/application/ports/password-hasher.port';

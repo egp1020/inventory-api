@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { IProductRepository } from '@products/domain';
-import { PaginatedProductResultDto, ProductResultDto, PRODUCT_REPOSITORY } from '@products/application';
+import { PaginatedProductResultDto, ProductResultDto } from '@products/application/dtos';
 
+const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 /**
  * ListProductsUseCase

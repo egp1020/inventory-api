@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ProductNotFoundError, ProductHasMovementsError } from '@products/domain';
 import type { IProductRepository } from '@products/domain';
-import { PRODUCT_REPOSITORY } from '@products/application';
 
+const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 /**
  * DeleteProductUseCase

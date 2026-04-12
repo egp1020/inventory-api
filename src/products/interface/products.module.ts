@@ -7,9 +7,10 @@ import {
   UpdateProductUseCase,
   ListProductsUseCase,
   DeleteProductUseCase,
-  PRODUCT_REPOSITORY,
 } from '@products/application';
 import { ProductController } from './products.controller';
+
+const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 @Module({
   controllers: [ProductController],

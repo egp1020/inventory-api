@@ -8,9 +8,9 @@ import { Quantity } from '@movements/domain/value-objects';
 import {
   RegisterMovementCommandDto,
   MovementResultDto,
-  MOVEMENT_REPOSITORY,
-} from '@movements/application';
+} from '@movements/application/dtos';
 
+const MOVEMENT_REPOSITORY = Symbol('MOVEMENT_REPOSITORY');
 
 /**
  * RegisterMovementUseCase
@@ -21,35 +21,35 @@ import {
 @Injectable()
 export class RegisterMovementUseCase {
   constructor(
-  @Inject(MOVEMENT_REPOSITORY)
-  private readonly movementRepository: IMovementRepository,
+    @Inject(MOVEMENT_REPOSITORY)
+    private readonly movementRepository: IMovementRepository,
   ) {}
 
   async execute(command: RegisterMovementCommandDto): Promise<MovementResultDto> {
-  // Crear el movimiento
-  const quantity = Quantity.create(command.quantity);
-  const movement = Movement.create(
-  command.productId,
-  command.warehouseId,
-  command.userId,
-  command.type as MovementType,
-  quantity,
-  command.notes,
-  );
+    // Crear el movimiento
+    const quantity = Quantity.create(command.quantity);
+    const movement = Movement.create(
+      command.productId,
+      command.warehouseId,
+      command.userId,
+      command.type as MovementType,
+      quantity,
+      command.notes,
+    );
 
-  movement.validate();
-  // El repositorio hará las validaciones (existencia de producto, bodega, usuario, stock, etc.)
-  await this.movementRepository.save(movement);
+    movement.validate();
+    // El repositorio hará las validaciones (existencia de producto, bodega, usuario, stock, etc.)
+    await this.movementRepository.save(movement);
 
-  return new MovementResultDto(
-  movement.getId(),
-  movement.getProductId(),
-  movement.getWarehouseId(),
-  movement.getUserId(),
-  movement.getTypeValue(),
-  movement.getQuantityValue(),
-  movement.getNotes(),
-  movement.getCreatedAt(),
-  );
+    return new MovementResultDto(
+      movement.getId(),
+      movement.getProductId(),
+      movement.getWarehouseId(),
+      movement.getUserId(),
+      movement.getTypeValue(),
+      movement.getQuantityValue(),
+      movement.getNotes(),
+      movement.getCreatedAt(),
+    );
   }
 }
