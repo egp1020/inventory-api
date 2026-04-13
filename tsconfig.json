@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolvePackageJsonExports": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "isolatedModules": true,
     "declaration": true,
@@ -20,6 +19,16 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@shared/*": ["src/shared/*"],
+      "@database/*": ["src/database/*"],
+      "@auth/*": ["src/auth/*"],
+      "@users/*": ["src/users/*"],
+      "@warehouses/*": ["src/warehouses/*"],
+      "@products/*": ["src/products/*"],
+      "@movements/*": ["src/movements/*"],
+      "@reports/*": ["src/reports/*"]
+    }
   }
 }
