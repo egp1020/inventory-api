@@ -60,6 +60,6 @@ import { AuthController } from './interface/auth.controller';
     JwtRefreshGuard,
     RolesGuard,
   ],
-  exports: [JwtAuthGuard, JwtRefreshGuard, RolesGuard],
+  exports: [PASSWORD_HASHER, JwtAuthGuard, JwtRefreshGuard, RolesGuard],
 })
 export class AuthModule {}
