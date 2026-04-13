@@ -1,0 +1,114 @@
+import { RefreshTokenUseCase } from '../refresh-token.use-case';
+import { IUserRepository } from '../../../domain/ports/user.repository.port';
+import { ITokenGenerator } from '../../ports/token-generator.port';
+import { User } from '../../../domain/entities/user.entity';
+import {
+  InvalidRefreshTokenError,
+  UserInactiveError,
+} from '../../../domain/errors/auth.errors';
+import { RefreshTokenCommandDto } from '../../dtos';
+
+describe('RefreshTokenUseCase', () => {
+  let useCase: RefreshTokenUseCase;
+  let userRepository: jest.Mocked<IUserRepository>;
+  let tokenGenerator: jest.Mocked<ITokenGenerator>;
+
+  beforeEach(() => {
+    userRepository = {
+      findByEmail: jest.fn(),
+      findById: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      softDelete: jest.fn(),
+    };
+
+    tokenGenerator = {
+      generateAccessToken: jest.fn(),
+      generateRefreshToken: jest.fn(),
+      validateAccessToken: jest.fn(),
+      validateRefreshToken: jest.fn(),
+    };
+
+    useCase = new RefreshTokenUseCase(userRepository, tokenGenerator);
+  });
+
+  describe('execute', () => {
+    it('should return new tokens when refresh token is valid', async () => {
+      // Arrange
+      const refreshToken = 'valid-refresh-token';
+      const userId = 'user-id';
+      const user = User.create({
+        id: userId,
+        email: 'admin@test.com',
+        passwordHash: 'hashed-password',
+        role: 'ADMIN',
+        warehouseId: null,
+        createdAt: new Date(),
+      });
+
+      tokenGenerator.validateRefreshToken.mockReturnValue({ sub: userId });
+      userRepository.findById.mockResolvedValue(user);
+      tokenGenerator.generateAccessToken.mockReturnValue('new-access-token');
+      tokenGenerator.generateRefreshToken.mockReturnValue('new-refresh-token');
+
+      // Act
+      const command: RefreshTokenCommandDto = { refreshToken };
+      const result = await useCase.execute(command);
+
+      // Assert
+      expect(result).toEqual({
+        accessToken: 'new-access-token',
+        refreshToken: 'new-refresh-token',
+      });
+
+      expect(
+        tokenGenerator.validateRefreshToken as jest.Mock,
+      ).toHaveBeenCalledWith(refreshToken);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(userRepository.findById as jest.Mock).toHaveBeenCalledWith(userId);
+    });
+
+    it('should throw InvalidRefreshTokenError when token is invalid', async () => {
+      // Arrange
+      tokenGenerator.validateRefreshToken.mockReturnValue(null);
+
+      // Act & Assert
+      const command: RefreshTokenCommandDto = { refreshToken: 'invalid-token' };
+      await expect(useCase.execute(command)).rejects.toThrow(
+        InvalidRefreshTokenError,
+      );
+    });
+
+    it('should throw InvalidRefreshTokenError when user not found', async () => {
+      // Arrange
+      tokenGenerator.validateRefreshToken.mockReturnValue({ sub: 'user-id' });
+      userRepository.findById.mockResolvedValue(null);
+
+      // Act & Assert
+      const command: RefreshTokenCommandDto = { refreshToken: 'valid-token' };
+      await expect(useCase.execute(command)).rejects.toThrow(
+        InvalidRefreshTokenError,
+      );
+    });
+
+    it('should throw UserInactiveError when user is deleted', async () => {
+      // Arrange
+      const user = User.create({
+        id: 'user-id',
+        email: 'admin@test.com',
+        passwordHash: 'hashed-password',
+        role: 'ADMIN',
+        warehouseId: null,
+        createdAt: new Date(),
+        deletedAt: new Date(),
+      });
+
+      tokenGenerator.validateRefreshToken.mockReturnValue({ sub: 'user-id' });
+      userRepository.findById.mockResolvedValue(user);
+
+      // Act & Assert
+      const command: RefreshTokenCommandDto = { refreshToken: 'valid-token' };
+      await expect(useCase.execute(command)).rejects.toThrow(UserInactiveError);
+    });
+  });
+});

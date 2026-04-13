@@ -1,0 +1,1 @@
+export { ProductRepositoryAdapter } from './adapters';
