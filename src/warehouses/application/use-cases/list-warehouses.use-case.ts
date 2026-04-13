@@ -4,8 +4,7 @@ import {
   PaginatedWarehouseResultDto,
   WarehouseResultDto,
 } from '@warehouses/application/dtos';
-
-const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
+import { WAREHOUSE_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 
 /**
  * ListWarehousesUseCase
@@ -47,4 +46,4 @@ export class ListWarehousesUseCase {
   }
 }
 
-export { WAREHOUSE_REPOSITORY };
+export { WAREHOUSE_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';

@@ -1,11 +1,10 @@
+import { PRODUCT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   ProductNotFoundError,
   ProductHasMovementsError,
 } from '@products/domain';
 import type { IProductRepository } from '@products/domain';
-
-const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 /**
  * DeleteProductUseCase
@@ -38,4 +37,4 @@ export class DeleteProductUseCase {
   }
 }
 
-export { PRODUCT_REPOSITORY };
+export { PRODUCT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';

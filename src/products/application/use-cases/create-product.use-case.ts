@@ -1,3 +1,4 @@
+import { PRODUCT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Product, SKU } from '@products/domain';
@@ -6,8 +7,6 @@ import {
   CreateProductCommandDto,
   ProductResultDto,
 } from '@products/application/dtos';
-
-const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 /**
  * CreateProductUseCase
@@ -50,4 +49,4 @@ export class CreateProductUseCase {
   }
 }
 
-export { PRODUCT_REPOSITORY };
+export { PRODUCT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';

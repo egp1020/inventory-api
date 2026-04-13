@@ -1,8 +1,7 @@
+import { REPORT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 import { Inject, Injectable } from '@nestjs/common';
 import type { IReportRepository } from '@reports/application/ports';
 import { MovementHistoryReportResultDto } from '@reports/application/dtos';
-
-const REPORT_REPOSITORY = Symbol('REPORT_REPOSITORY');
 
 /**
  * GetMovementHistoryReportUseCase

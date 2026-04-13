@@ -1,9 +1,8 @@
+import { PRODUCT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 import { Inject, Injectable } from '@nestjs/common';
 import { ProductNotFoundError } from '@products/domain';
 import type { IProductRepository } from '@products/domain';
 import { ProductResultDto } from '@products/application/dtos';
-
-const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 /**
  * GetProductByIdUseCase
@@ -40,4 +39,4 @@ export class GetProductByIdUseCase {
   }
 }
 
-export { PRODUCT_REPOSITORY };
+export { PRODUCT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';

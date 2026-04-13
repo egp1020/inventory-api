@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from '@database/prisma/prisma.service';
 import { WarehouseRepositoryAdapter } from '@warehouses/infrastructure';
+import { WAREHOUSE_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 import {
   CreateWarehouseUseCase,
   GetWarehouseByIdUseCase,
@@ -9,8 +10,6 @@ import {
   DeleteWarehouseUseCase,
 } from '@warehouses/application';
 import { WarehouseController } from './warehouses.controller';
-
-const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
 
 @Module({
   controllers: [WarehouseController],

@@ -5,8 +5,7 @@ import {
   UpdateWarehouseCommandDto,
   WarehouseResultDto,
 } from '@warehouses/application/dtos';
-
-const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
+import { WAREHOUSE_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 
 /**
  * UpdateWarehouseUseCase
@@ -60,4 +59,4 @@ export class UpdateWarehouseUseCase {
   }
 }
 
-export { WAREHOUSE_REPOSITORY };
+export { WAREHOUSE_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';

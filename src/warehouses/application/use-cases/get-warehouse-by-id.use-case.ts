@@ -2,8 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { WarehouseNotFoundError } from '@warehouses/domain';
 import type { IWarehouseRepository } from '@warehouses/domain';
 import { WarehouseResultDto } from '@warehouses/application/dtos';
-
-const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
+import { WAREHOUSE_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 
 /**
  * GetWarehouseByIdUseCase
@@ -39,4 +38,4 @@ export class GetWarehouseByIdUseCase {
   }
 }
 
-export { WAREHOUSE_REPOSITORY };
+export { WAREHOUSE_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';

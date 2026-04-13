@@ -1,3 +1,4 @@
+import { MOVEMENT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { IMovementRepository } from '@movements/domain/ports';
 import { Movement, MovementType } from '@movements/domain';
@@ -6,8 +7,6 @@ import {
   RegisterMovementCommandDto,
   MovementResultDto,
 } from '@movements/application/dtos';
-
-const MOVEMENT_REPOSITORY = Symbol('MOVEMENT_REPOSITORY');
 
 /**
  * RegisterMovementUseCase
