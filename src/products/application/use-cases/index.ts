@@ -1,3 +1,4 @@
+import { PRODUCT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 export {
   CreateProductUseCase,
   PRODUCT_REPOSITORY as CREATE_PRODUCT_REPOSITORY,

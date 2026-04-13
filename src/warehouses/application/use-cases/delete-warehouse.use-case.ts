@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { WarehouseNotFoundError } from '@warehouses/domain';
 import type { IWarehouseRepository } from '@warehouses/domain';
-
-const WAREHOUSE_REPOSITORY = Symbol('WAREHOUSE_REPOSITORY');
+import { WAREHOUSE_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 
 /**
  * DeleteWarehouseUseCase
@@ -28,4 +27,4 @@ export class DeleteWarehouseUseCase {
   }
 }
 
-export { WAREHOUSE_REPOSITORY };
+export { WAREHOUSE_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';

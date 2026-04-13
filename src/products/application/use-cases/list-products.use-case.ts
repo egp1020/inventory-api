@@ -1,11 +1,10 @@
+import { PRODUCT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
 import { Inject, Injectable } from '@nestjs/common';
 import type { IProductRepository } from '@products/domain';
 import {
   PaginatedProductResultDto,
   ProductResultDto,
 } from '@products/application/dtos';
-
-const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 
 /**
  * ListProductsUseCase
@@ -48,4 +47,4 @@ export class ListProductsUseCase {
   }
 }
 
-export { PRODUCT_REPOSITORY };
+export { PRODUCT_REPOSITORY } from '@shared/infrastructure/constants/repository.symbols';
