@@ -20,7 +20,7 @@ async function bootstrap(): Promise<void> {
   const config = new DocumentBuilder()
     .setTitle('Inventory API')
     .setDescription('Sistema de gestión de inventario para cadena de bodegas')
-    .setVersion('1.0.1')
+    .setVersion('1.0.2')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'access-token',
