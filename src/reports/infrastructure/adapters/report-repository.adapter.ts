@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@database/prisma/prisma.service';
 import { IReportRepository } from '@reports/application/ports';
 import {
@@ -26,7 +26,7 @@ export class ReportRepositoryAdapter implements IReportRepository {
     });
 
     if (!warehouse) {
-      throw new Error(`Warehouse ${warehouseId} not found`);
+      throw new NotFoundException(`Warehouse ${warehouseId} not found`);
     }
 
     // Get todos los productos activos

@@ -1,0 +1,1478 @@
+{
+  "info": {
+    "_postman_id": "393e8274-461d-4941-8ba0-9f58201110e6",
+    "name": "Inventory API",
+    "description": "API REST para gestión de inventario - Warehouse Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13545978"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var timestamp = Date.now();",
+                  "pm.environment.set(\"lastRequestTime\", timestamp);",
+                  "var email = pm.environment.get(\"adminEmail\") || \"admin@inventory.com\";",
+                  "var password = pm.environment.get(\"adminPassword\") || \"Admin123!\";",
+                  "pm.request.body.update({",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "        email: email,",
+                  "        password: password",
+                  "    })",
+                  "});",
+                  "console.log(\"[Pre] ✅ Login: \" + email);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json().data;",
+                  "pm.test(\"Login successful\", function() {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "if(jsonData && jsonData.accessToken) {",
+                  "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "    pm.environment.set(\"refreshToken\", jsonData.refreshToken);",
+                  "    console.log(\"[Test] ✅ Token: \" + jsonData.accessToken.substring(0, 20) + \"...\");",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"refreshToken\") || \"\";",
+                  "if(!token) {",
+                  "    console.log(\"[WARNING] refreshToken no disponible, intentando con accessToken\");",
+                  "    token = pm.environment.get(\"accessToken\");",
+                  "}",
+                  "pm.request.body.update({",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "        refreshToken: token",
+                  "    })",
+                  "});",
+                  "console.log(\"[Pre] ✅ Refresh Token\");"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json().data;",
+                  "pm.test(\"Refresh successful\", function() {",
+                  "    pm.expect([200, 201, 400]).to.include(pm.response.code);",
+                  "});",
+                  "if(jsonData && jsonData.accessToken) {",
+                  "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "    pm.environment.set(\"refreshToken\", jsonData.refreshToken);",
+                  "    console.log(\"[Test] ✅ Token renovado\");",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "warehouses",
+      "item": [
+        {
+          "name": "List Warehouses",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "if(!token) {",
+                  "    console.log(\"[WARNING] No hay accessToken. Ejecuta Auth > Login primero\");",
+                  "}",
+                  "console.log(\"[Pre-Request] Check token\");"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"List successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    if(Array.isArray(jsonData) && jsonData.length > 0) {",
+                  "        console.log(\"[Test] ✅ Items found: \" + jsonData.length);",
+                  "    }",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/warehouses?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Warehouse by ID",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var id = pm.environment.get(\"warehouseId\");",
+                  "if(!id) {",
+                  "    console.log(\"[WARNING] warehouseId no definido\");",
+                  "}",
+                  "console.log(\"[Pre-Request] Using: \" + id);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    console.log(\"[Test] ✅ Data retrieved\");",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/warehouses/{{warehouseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses",
+                "{{warehouseId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Warehouse",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "var timestamp = Date.now();",
+                  "var name = \"Bodega \" + timestamp;",
+                  "var location = \"Location \" + timestamp;",
+                  "if(!token) throw new Error(\"❌ accessToken requerido\");",
+                  "pm.request.body.update({",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "        name: name,",
+                  "        location: location,",
+                  "        capacity: 1000",
+                  "    })",
+                  "});",
+                  "console.log(\"[Pre] ✅ Create Warehouse: \" + name);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Create successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var jsonData = pm.response.json().data;",
+                  "if(jsonData && jsonData.id) {",
+                  "    pm.environment.set(\"warehouseId\", jsonData.id);",
+                  "    console.log(\"[Test] ✅ Created: \" + jsonData.id);",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bodega Central\",\n  \"location\": \"Bogotá, Colombia\",\n  \"capacity\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/warehouses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Warehouse",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "var warehouseId = pm.environment.get(\"warehouseId\");",
+                  "if(!token) throw new Error(\"❌ accessToken requerido\");",
+                  "if(!warehouseId) throw new Error(\"❌ warehouseId requerido. Crea Warehouse primero\");",
+                  "pm.request.body.update({",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "        name: \"Updated Warehouse\",",
+                  "        location: \"Updated Location\",",
+                  "        capacity: 2000",
+                  "    })",
+                  "});",
+                  "console.log(\"[Pre] ✅ Update Warehouse: \" + warehouseId);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Update successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var jsonData = pm.response.json().data;",
+                  "console.log(\"[Test] ✅ Updated\");"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bodega Central - Actualizada\",\n  \"location\": \"Bogotá, Cundinamarca, Colombia\",\n  \"capacity\": 1500\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/warehouses/{{warehouseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses",
+                "{{warehouseId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Warehouse",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var warehouseId = pm.environment.get(\"warehouseId\");",
+                  "if(!warehouseId) throw new Error(\"❌ warehouseId requerido. Crea Warehouse primero\");",
+                  "console.log(\"[Pre] ✅ Delete Warehouse: \" + warehouseId);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json().data;",
+                  "pm.test(\"Delete warehouse successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "console.log(\"[Test] ✅ Bodega eliminada\");"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/warehouses/{{warehouseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses",
+                "{{warehouseId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "item": [
+        {
+          "name": "List Products",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "if(!token) {",
+                  "    console.log(\"[WARNING] No hay accessToken. Ejecuta Auth > Login primero\");",
+                  "}",
+                  "console.log(\"[Pre-Request] Check token\");"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"List successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    if(Array.isArray(jsonData) && jsonData.length > 0) {",
+                  "        console.log(\"[Test] ✅ Items found: \" + jsonData.length);",
+                  "    }",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var id = pm.environment.get(\"productId\");",
+                  "if(!id) {",
+                  "    console.log(\"[WARNING] productId no definido\");",
+                  "}",
+                  "console.log(\"[Pre-Request] Using: \" + id);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    console.log(\"[Test] ✅ Data retrieved\");",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "var timestamp = Date.now();",
+                  "var sku = \"SKU-\" + timestamp.toString().slice(-6);",
+                  "var name = \"Product \" + timestamp;",
+                  "",
+                  "if(!token) throw new Error(\"❌ accessToken requerido\");",
+                  "",
+                  "pm.request.body.update({",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "        name: name,",
+                  "        sku: sku,",
+                  "        description: \"Test product\",",
+                  "        unit: \"piece\",",
+                  "        minStockAlert: 10",
+                  "    })",
+                  "});",
+                  "",
+                  "console.log(\"[Pre] ✅ Create Product: \" + sku);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Create successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var jsonData = pm.response.json().data;",
+                  "if(jsonData && jsonData.id) {",
+                  "    pm.environment.set(\"productId\", jsonData.id);",
+                  "    console.log(\"[Test] ✅ Created: \" + jsonData.id);",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"PROD-001\",\n  \"name\": \"Laptop Dell\",\n  \"unit\": \"units\",\n  \"description\": \"Laptop Dell XPS 13\",\n  \"minStockAlert\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "var productId = pm.environment.get(\"productId\");",
+                  "",
+                  "if(!token) throw new Error(\"❌ accessToken requerido\");",
+                  "if(!productId) {",
+                  "    console.log(\"[WARNING] productId no disponible\");",
+                  "    productId = \"\";",
+                  "}",
+                  "",
+                  "pm.request.body.update({",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "        name: \"Updated Product\",",
+                  "        unit: \"box\"",
+                  "    })",
+                  "});",
+                  "",
+                  "console.log(\"[Pre] ✅ Update Product: \" + productId);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Update successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var jsonData = pm.response.json().data;",
+                  "console.log(\"[Test] ✅ Updated\");"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop Dell XPS 15\",\n  \"description\": \"Laptop Dell XPS 15 actualizada\",\n  \"unit\": \"units\",\n  \"minStockAlert\": 8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var productId = pm.environment.get(\"productId\");",
+                  "if(!productId) throw new Error(\"❌ productId requerido. Crea Product primero\");",
+                  "console.log(\"[Pre] ✅ Delete Product: \" + productId);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json().data;",
+                  "pm.test(\"Delete product successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "console.log(\"[Test] ✅ Producto eliminado\");"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "item": [
+        {
+          "name": "List Users",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "if(!token) {",
+                  "    console.log(\"[WARNING] No hay accessToken. Ejecuta Auth > Login primero\");",
+                  "}",
+                  "console.log(\"[Pre-Request] Check token\");"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"List successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    if(Array.isArray(jsonData) && jsonData.length > 0) {",
+                  "        console.log(\"[Test] ✅ Items found: \" + jsonData.length);",
+                  "    }",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var id = pm.environment.get(\"userId\");",
+                  "if(!id) {",
+                  "    console.log(\"[WARNING] userId no definido\");",
+                  "}",
+                  "console.log(\"[Pre-Request] Using: \" + id);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    console.log(\"[Test] ✅ Data retrieved\");",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "var timestamp = Date.now();",
+                  "var randomNum = Math.floor(Math.random() * 9999);",
+                  "var email = \"user_\" + timestamp + \"_\" + randomNum + \"@test.com\";",
+                  "var password = \"Pass\" + timestamp.toString().slice(-4) + \"!@\";",
+                  "",
+                  "if(!token) throw new Error(\"❌ accessToken requerido\");",
+                  "",
+                  "pm.request.body.update({",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "        email: email,",
+                  "        password: password,",
+                  "        role: \"OPERATOR\"",
+                  "    })",
+                  "});",
+                  "",
+                  "console.log(\"[Pre] ✅ Create User: \" + email);"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json().data;",
+                  "pm.test(\"Create user successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 400]);",
+                  "});",
+                  "if(jsonData && jsonData.id) {",
+                  "    pm.environment.set(\"userId\", jsonData.id);",
+                  "    pm.environment.set(\"userEmail\", jsonData.email);",
+                  "    console.log(\"[Test] ✅ User: \" + jsonData.id);",
+                  "}"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{dynamicOperatorEmail}}\",\n  \"password\": \"{{dynamicPassword}}\",\n  \"role\": \"{{dynamicRole}}\",\n  \"warehouseId\": \"{{warehouseId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var userId = pm.environment.get(\"userId\") || \"\";",
+                  "if(!userId) {",
+                  "    console.log(\"[WARNING] userId no disponible\");",
+                  "    userId = \"\";",
+                  "}",
+                  "pm.request.body.update({",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "        email: \"updated_\" + Date.now() + \"@test.com\"",
+                  "    })",
+                  "});",
+                  "console.log(\"[Pre] ✅ Update User\");"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json().data;",
+                  "pm.test(\"Update successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 404]);",
+                  "});",
+                  "console.log(\"[Test] ✅ Updated\");"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{dynamicUpdatedEmail}}\",\n  \"role\": \"{{dynamicUpdatedRole}}\",\n  \"warehouseId\": \"{{warehouseId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var userId = pm.environment.get(\"userId\") || \"\";",
+                  "console.log(\"[Pre] ✅ Delete User\");"
+                ],
+                "type": "application/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Delete user successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204, 404]);",
+                  "});",
+                  "console.log(\"[Test] ✅ User eliminado\");"
+                ],
+                "type": "application/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "movements",
+      "item": [
+        {
+          "name": "Create Movement",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "var timestamp = Date.now();",
+                  "",
+                  "if(!token) throw new Error(\"❌ accessToken requerido. Ejecuta Auth > Login primero\");",
+                  "",
+                  "var productId = pm.environment.get(\"productId\") || \"1\";",
+                  "var warehouseId = pm.environment.get(\"warehouseId\") || \"1\";",
+                  "",
+                  "pm.request.body.update({",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "        productId: productId,",
+                  "        warehouseId: warehouseId,",
+                  "        type: \"ENTRADA\",",
+                  "        quantity: 10,",
+                  "        notes: \"Stock entry \" + timestamp",
+                  "    })",
+                  "});",
+                  "",
+                  "console.log(\"[Pre] ✅ Create Movement: ENTRADA\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Create successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var jsonData = pm.response.json().data;",
+                  "if(jsonData && jsonData.id) {",
+                  "    pm.environment.set(\"movementId\", jsonData.id);",
+                  "    console.log(\"[Test] ✅ Movement created: \" + jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"1\",\n  \"warehouseId\": \"1\",\n  \"type\": \"ENTRADA\",\n  \"quantity\": 10,\n  \"notes\": \"Stock entry\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/movements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Movements",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "if(!token) {",
+                  "    console.log(\"[WARNING] No hay accessToken. Ejecuta Auth > Login primero\");",
+                  "}",
+                  "console.log(\"[Pre-Request] Check token\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"List successful\", function() {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    if(Array.isArray(jsonData) && jsonData.length > 0) {",
+                  "        console.log(\"[Test] ✅ Movements found: \" + jsonData.length);",
+                  "        pm.environment.set(\"movementId\", jsonData[0].id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/movements?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "movements"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "reports",
+      "item": [
+        {
+          "name": "Get Stock by Warehouse",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "var warehouseId = pm.environment.get(\"warehouseId\");",
+                  "",
+                  "if(!token) throw new Error(\"❌ accessToken requerido\");",
+                  "if(!warehouseId) {",
+                  "    console.log(\"[WARNING] warehouseId no definido, usando ID 1\");",
+                  "    warehouseId = \"1\";",
+                  "}",
+                  "",
+                  "console.log(\"[Pre-Request] Using warehouse: \" + warehouseId);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get stock successful\", function() {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    if(jsonData && (jsonData.products || Array.isArray(jsonData))) {",
+                  "        console.log(\"[Test] ✅ Stock data retrieved\");",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/stock/{{warehouseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "stock",
+                "{{warehouseId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Low Stock Alerts",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "if(!token) {",
+                  "    console.log(\"[WARNING] No hay accessToken. Ejecuta Auth > Login primero\");",
+                  "}",
+                  "console.log(\"[Pre-Request] Check token\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get alerts successful\", function() {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    if(Array.isArray(jsonData)) {",
+                  "        console.log(\"[Test] ✅ Alerts found: \" + jsonData.length);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/alerts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "alerts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Movements Report",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var token = pm.environment.get(\"accessToken\");",
+                  "if(!token) {",
+                  "    console.log(\"[WARNING] No hay accessToken. Ejecuta Auth > Login primero\");",
+                  "}",
+                  "console.log(\"[Pre-Request] Check token\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get movements report successful\", function() {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "if(pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json().data;",
+                  "    if(Array.isArray(jsonData)) {",
+                  "        console.log(\"[Test] ✅ Movement history found: \" + jsonData.length);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/movements?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "movements"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@inventory.com"
+    },
+    {
+      "key": "adminPassword",
+      "value": "Admin123!"
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": ""
+    },
+    {
+      "key": "warehouseId",
+      "value": ""
+    },
+    {
+      "key": "movementId",
+      "value": ""
+    }
+  ]
+}
