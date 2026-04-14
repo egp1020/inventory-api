@@ -1,6 +1,6 @@
 {
   "name": "inventory-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Backend de gestión de inventario para cadena de bodegas con NestJS, Prisma, PostgreSQL y arquitectura hexagonal",
   "author": "Estefanía Garcés Pérez",
   "private": true,
