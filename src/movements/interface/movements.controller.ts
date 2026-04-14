@@ -46,6 +46,7 @@ export class MovementsController {
   ) {}
 
   @Post()
+  @Roles('OPERATOR', 'ADMIN')
   @ApiOperation({ summary: 'Register a new stock movement (entry or exit)' })
   @ApiResponse({
     status: 201,
@@ -62,7 +63,7 @@ export class MovementsController {
     @Req() req: any,
   ): Promise<MovementResponseDto> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const userId = req.user?.sub;
+    const userId = req.user?.userId;
     if (!userId) {
       throw new BadRequestException('User not found in request');
     }
